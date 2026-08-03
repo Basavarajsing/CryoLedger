@@ -32,10 +32,15 @@ self.addEventListener('fetch', (event) => {
     if (event.request.method !== 'GET') return;
 
     event.respondWith(
-        caches.match(event.request).then((response) => {
-            return response || fetch(event.request).catch(() => {
-                // Fallback or offline page logic can go here
-            });
-        })
+        fetch(event.request)
+            .then(networkResponse => {
+                // Return network response right away. 
+                // Only consider caching dynamic gets if strictly needed.
+                return networkResponse;
+            })
+            .catch(() => {
+                // If network fails (offline), try the cache
+                return caches.match(event.request);
+            })
     );
 });
