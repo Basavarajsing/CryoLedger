@@ -402,3 +402,53 @@ function checkAccess(requiredRole) {
         }
     }
 }
+
+/**
+ * PWA Custom Install Button Logic
+ */
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67+ from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
+    // Update UI to notify the user they can add to home screen
+    showCustomInstallButton();
+});
+
+function showCustomInstallButton() {
+    if (document.getElementById('pwa-install-btn')) return; // Already showing
+
+    const installBtn = document.createElement('button');
+    installBtn.id = 'pwa-install-btn';
+    installBtn.className = 'btn btn-primary';
+    installBtn.innerHTML = '💾 Install App (Fast & Offline)';
+    installBtn.style.position = 'fixed';
+    installBtn.style.bottom = '20px';
+    installBtn.style.right = '20px';
+    installBtn.style.zIndex = '99999';
+    installBtn.style.boxShadow = '0 5px 15px rgba(16, 185, 129, 0.4)';
+
+    installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        // Show the install prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            installBtn.remove();
+        }
+        deferredPrompt = null;
+    });
+
+    document.body.appendChild(installBtn);
+}
+
+window.addEventListener('appinstalled', () => {
+    // Hide the app-provided install promotion
+    const btn = document.getElementById('pwa-install-btn');
+    if (btn) btn.remove();
+    deferredPrompt = null;
+    console.log('PWA was installed');
+});
