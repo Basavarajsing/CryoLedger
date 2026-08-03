@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoLedger - Product Records</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="/icons/icon.svg">
+</head>
+
+<body>
+
+    <div class="container">
+        <div style="margin-bottom: 2rem;">
+            <h2 style="font-size: 2rem; font-weight: 700;">Product Audit Directory</h2>
+            <p style="color: var(--color-secondary);">Track registered product items, review verification logs, and
+                manage QR codes.</p>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Controls -->
+        <div class="card" style="margin-bottom: 2rem; padding: 1.25rem 2rem;">
+            <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 250px;">
+                    <label for="search-prod">Search by Product ID or Name</label>
+                    <input type="text" id="search-prod" placeholder="Type name or serial...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Products List Table -->
+        <div class="table-wrapper" style="margin-bottom: 3rem;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Details</th>
+                        <th>Manufacturer</th>
+                        <th>Authorized Centres</th>
+                        <th>Scan Count</th>
+                        <th>QR Code</th>
+                        <th style="text-align: right;">Audit Logs</th>
+                    </tr>
+                </thead>
+                <tbody id="products-table-body">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--color-secondary); padding: 3rem;">
+                            Retrieving registered products directory...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Audit Log Section (Slides open when viewing a product's history) -->
+        <div id="audit-log-section" class="card" style="display: none; border-color: var(--info); padding: 2rem;">
+            <div
+                style="display:flex; justify-content: space-between; align-items: center; border-bottom:1px solid var(--card-border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <span
+                        style="font-size: 0.8rem; color: var(--color-secondary); font-weight: 700; text-transform: uppercase;">Verification
+                        Audit trail</span>
+                    <h3 id="audit-title" style="color: var(--info); font-size: 1.35rem; font-weight: 700;">-</h3>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="closeAuditSection()"
+                    style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+                    ✕ Close
+                </button>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Verifier Location</th>
+                            <th>Coordinates</th>
+                            <th>Matched Location</th>
+                            <th>Final Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="audit-table-body">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div id="details-modal" class="modal-backdrop" style="display: none;">
+        <div class="modal-content"
+            style="max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; padding: 2rem;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--card-border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <span
+                        style="font-size: 0.8rem; color: var(--color-secondary); font-weight: 700; text-transform: uppercase;">Product
+                        Comprehensive Passport</span>
+                    <h3 id="details-modal-title"
+                        style="color: var(--color-primary); font-size: 1.5rem; font-weight: 700; margin: 0.25rem 0 0 0;">
+                        Product Details</h3>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="closeDetailsModal()"
+                    style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">✕ Close</button>
+            </div>
+
+            <!-- Real-time Custody Stepper Tracker -->
+            <div class="card stepper-container"
+                style="padding: 1.25rem; margin-bottom: 2rem; background-color: var(--bg-tertiary);">
+                <h4
+                    style="color: var(--color-primary); font-size: 1.05rem; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📊 Custody Transit Progress</span>
+                </h4>
+                <div class="stepper" id="custody-stepper"
+                    style="display: flex; justify-content: space-between; position: relative; margin-top: 1.5rem; margin-bottom: 1.5rem;">
+                    <!-- Line background -->
+                    <div class="stepper-line"
+                        style="position: absolute; top: 15px; left: 5%; right: 5%; height: 4px; background: rgba(255,255,255,0.05); z-index: 1;">
+                    </div>
+                    <div class="stepper-progress" id="stepper-progress-bar"
+                        style="position: absolute; top: 15px; left: 5%; width: 0%; height: 4px; background: var(--accent); z-index: 2; transition: width 0.4s ease;">
+                    </div>
+
+                    <!-- Steps -->
+                    <div class="step" data-step="1"
+                        style="display: flex; flex-direction: column; align-items: center; z-index: 3; flex: 1; text-align: center;">
+                        <div class="step-bulb"
+                            style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-primary); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-secondary); transition: all 0.3s ease;">
+                            1</div>
+                        <div class="step-label"
+                            style="font-size: 0.75rem; font-weight: 600; color: var(--color-secondary); margin-top: 0.5rem;">
+                            Registered</div>
+                    </div>
+                    <div class="step" data-step="2"
+                        style="display: flex; flex-direction: column; align-items: center; z-index: 3; flex: 1; text-align: center;">
+                        <div class="step-bulb"
+                            style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-primary); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-secondary); transition: all 0.3s ease;">
+                            2</div>
+                        <div class="step-label"
+                            style="font-size: 0.75rem; font-weight: 600; color: var(--color-secondary); margin-top: 0.5rem;">
+                            In Transit (Depot)</div>
+                    </div>
+                    <div class="step" data-step="3"
+                        style="display: flex; flex-direction: column; align-items: center; z-index: 3; flex: 1; text-align: center;">
+                        <div class="step-bulb"
+                            style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-primary); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-secondary); transition: all 0.3s ease;">
+                            3</div>
+                        <div class="step-label"
+                            style="font-size: 0.75rem; font-weight: 600; color: var(--color-secondary); margin-top: 0.5rem;">
+                            Depot Dispatched</div>
+                    </div>
+                    <div class="step" data-step="4"
+                        style="display: flex; flex-direction: column; align-items: center; z-index: 3; flex: 1; text-align: center;">
+                        <div class="step-bulb"
+                            style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-primary); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-secondary); transition: all 0.3s ease;">
+                            4</div>
+                        <div class="step-label"
+                            style="font-size: 0.75rem; font-weight: 600; color: var(--color-secondary); margin-top: 0.5rem;">
+                            Store Handed Over</div>
+                    </div>
+                    <div class="step" data-step="5"
+                        style="display: flex; flex-direction: column; align-items: center; z-index: 3; flex: 1; text-align: center;">
+                        <div class="step-bulb"
+                            style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-primary); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-secondary); transition: all 0.3s ease;">
+                            5</div>
+                        <div class="step-label"
+                            style="font-size: 0.75rem; font-weight: 600; color: var(--color-secondary); margin-top: 0.5rem;">
+                            Secure Custody Verified</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs/Sections inside modal -->
+            <div class="grid-2" style="gap: 1.5rem; margin-bottom: 1.5rem;">
+                <!-- Left Hand Details column -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- Passport Section -->
+                    <div class="card" style="padding: 1.25rem; background-color: var(--bg-tertiary);">
+                        <h4
+                            style="color: var(--color-primary); margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; font-size: 1.05rem;">
+                            📦 Digital Passport</h4>
+                        <div id="passport-preview-container" class="qr-preview-container"
+                            style="margin-bottom: 1rem; display: none; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: var(--radius-sm);">
+                            <img id="detail-product-img" src="" alt="Product Image"
+                                style="max-width: 120px; border-radius: var(--radius-sm); border: 1px solid var(--card-border);">
+                        </div>
+                        <div class="profile-details-grid"
+                            style="display: grid; grid-template-columns: 120px 1fr; gap: 0.5rem; font-size: 0.9rem;">
+                            <div><strong>Brand:</strong></div>
+                            <div id="detail-brand">-</div>
+                            <div><strong>Category:</strong></div>
+                            <div id="detail-category">-</div>
+                            <div><strong>Model:</strong></div>
+                            <div id="detail-model">-</div>
+                            <div><strong>Batch:</strong></div>
+                            <div id="detail-batch">-</div>
+                            <div><strong>MFG Date:</strong></div>
+                            <div id="detail-mfg-date">-</div>
+                            <div><strong>Expiry Date:</strong></div>
+                            <div id="detail-expiry-date">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Smart Warranty Section -->
+                    <div class="card" style="padding: 1.25rem; background-color: var(--bg-tertiary);">
+                        <h4
+                            style="color: var(--color-primary); margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; font-size: 1.05rem;">
+                            🛡️ Warranty Status</h4>
+                        <div id="detail-warranty-badge-container" style="margin-bottom: 0.75rem;"></div>
+                        <div class="profile-details-grid"
+                            style="display: grid; grid-template-columns: 120px 1fr; gap: 0.5rem; font-size: 0.9rem;">
+                            <div><strong>Type:</strong></div>
+                            <div id="detail-warranty-type">-</div>
+                            <div><strong>Coverage:</strong></div>
+                            <div id="detail-warranty-period">-</div>
+                            <div><strong>Start Date:</strong></div>
+                            <div id="detail-warranty-start">-</div>
+                            <div><strong>End Date:</strong></div>
+                            <div id="detail-warranty-end">-</div>
+                            <div><strong>Remaining:</strong></div>
+                            <div id="detail-warranty-days">-</div>
+                            <div style="grid-column: span 2; margin-top: 0.5rem;">
+                                <strong>Terms:</strong>
+                                <div id="detail-warranty-terms"
+                                    style="background: rgba(0,0,0,0.1); padding: 0.5rem; border-radius: var(--radius-sm); font-size: 0.8rem; height: 60px; overflow-y: auto; margin-top: 0.25rem;">
+                                    -</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health & Trust Section -->
+                    <div class="card" style="padding: 1.25rem; background-color: var(--bg-tertiary);">
+                        <h4
+                            style="color: var(--color-primary); margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; font-size: 1.05rem;">
+                            🏥 Health & Trust</h4>
+                        <div class="profile-details-grid"
+                            style="display: grid; grid-template-columns: 120px 1fr; gap: 0.5rem; font-size: 0.9rem;">
+                            <div><strong>Overall Health:</strong></div>
+                            <div id="detail-health-score" style="font-weight:700;">-</div>
+                            <div><strong>Trust Level:</strong></div>
+                            <div id="detail-trust-level" style="font-weight:700;">-</div>
+                            <div><strong>Risk Level:</strong></div>
+                            <div id="detail-risk-level" style="font-weight:700;">-</div>
+                            <div><strong>Attempts Logged:</strong></div>
+                            <div id="detail-attempts-ver">-</div>
+                            <div><strong>Verdict:</strong></div>
+                            <div id="detail-verdict">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Hand Recalls and Journey column -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- Recall Management Section -->
+                    <div class="card"
+                        style="padding: 1.25rem; background-color: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2);">
+                        <h4
+                            style="color: var(--error); margin-bottom: 0.75rem; border-bottom: 1px solid rgba(239, 68, 68, 0.1); padding-bottom: 0.5rem; font-size: 1.05rem;">
+                            ⚠️ Recall Status</h4>
+
+                        <div id="recall-warning-block"
+                            style="display: none; background-color: rgba(239, 68, 68, 0.1); border: 1px solid var(--error); border-radius: var(--radius-sm); padding: 0.75rem; margin-bottom: 1rem; color: #ff8a8a; font-size: 0.85rem;">
+                            <strong>ACTIVE RECALL:</strong> <span id="detail-recall-reason"></span>
+                            <div style="margin-top: 0.25rem;">Severity: <span id="detail-recall-severity"
+                                    style="text-transform: uppercase; font-weight:700;"></span></div>
+                            <div style="margin-top: 0.25rem;">Instructions: <span id="detail-recall-instr"></span></div>
+                            <div style="margin-top: 0.25rem;">Nearest Center: <span id="detail-recall-center"></span>
+                            </div>
+                            <div style="margin-top: 0.25rem;">Refund Eligible: <span id="detail-recall-refund"></span>
+                            </div>
+                        </div>
+
+                        <div id="recall-returned-block"
+                            style="display: none; background-color: rgba(46, 204, 113, 0.1); border: 1px solid var(--accent); border-radius: var(--radius-sm); padding: 0.75rem; margin-bottom: 1rem; color: var(--accent); font-size: 0.85rem;">
+                            <strong>RETURN RECEIVED:</strong> Custody surrendered for recall.
+                            <div style="margin-top: 0.25rem;">Returned By: <span id="detail-recall-returned-by"
+                                    style="font-weight:700;"></span></div>
+                        </div>
+
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-danger" id="btn-trigger-recall-form"
+                                style="padding: 0.4rem 0.8rem; font-size: 0.82rem;">Issue Recall</button>
+                            <button type="button" class="btn btn-secondary" id="btn-clear-recall"
+                                style="padding: 0.4rem 0.8rem; font-size: 0.82rem; display: none;">Clear
+                                Recall</button>
+                            <button type="button" class="btn btn-secondary" id="btn-assign-logistics"
+                                style="padding: 0.4rem 0.8rem; font-size: 0.82rem;">Assign Logistics Entity</button>
+                            <button type="button" class="btn btn-primary" id="btn-repair-recall"
+                                style="padding: 0.4rem 0.8rem; font-size: 0.82rem; display: none; background-color: var(--accent); border-color: var(--accent); color: var(--bg-primary); font-weight: bold;">🔧
+                                Repair & Re-release</button>
+                        </div>
+
+                        <!-- Mini Inline Recall Form -->
+                        <div id="inline-recall-form"
+                            style="display: none; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: var(--radius-sm); margin-top: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Configure Recall</h5>
+                            <div class="form-group" style="margin-bottom: 0.5rem;">
+                                <label style="font-size:0.75rem;">Reason *</label>
+                                <input type="text" id="recall-input-reason" placeholder="e.g. Battery heating defect"
+                                    style="padding: 0.35rem 0.5rem; font-size: 0.85rem;">
+                            </div>
+                            <div class="grid-2" style="gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label style="font-size:0.75rem;">Severity</label>
+                                    <select id="recall-input-severity"
+                                        style="padding: 0.35rem 0.5rem; font-size: 0.85rem;">
+                                        <option value="Low">Low</option>
+                                        <option value="Medium" selected>Medium</option>
+                                        <option value="High">High</option>
+                                        <option value="Critical">Critical</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label style="font-size:0.75rem;">Refund Available</label>
+                                    <select id="recall-input-refund"
+                                        style="padding: 0.35rem 0.5rem; font-size: 0.85rem;">
+                                        <option value="no">No</option>
+                                        <option value="yes" selected>Yes</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0.5rem;">
+                                <label style="font-size:0.75rem;">Nearest Center for Dropoff</label>
+                                <input type="text" id="recall-input-center" placeholder="e.g. London Logistics Center"
+                                    style="padding: 0.35rem 0.5rem; font-size: 0.85rem;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0.75rem;">
+                                <label style="font-size:0.75rem;">Instructions</label>
+                                <textarea id="recall-input-instr" rows="2"
+                                    placeholder="e.g. Return to nearest logistics hub immediately."
+                                    style="padding: 0.35rem 0.5rem; font-size: 0.85rem;"></textarea>
+                            </div>
+                            <div style="display:flex; gap:0.5rem; justify-content: flex-end;">
+                                <button type="button" class="btn btn-secondary" id="btn-cancel-recall-form"
+                                    style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">Cancel</button>
+                                <button type="button" class="btn btn-danger" id="btn-submit-recall"
+                                    style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">Submit Recall</button>
+                            </div>
+                        </div>
+
+                        <!-- Mini Inline Unified Logistics Assignment Form -->
+                        <div id="inline-logistics-form"
+                            style="display: none; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: var(--radius-sm); margin-top: 1rem;">
+                            <h5 style="margin-bottom: 0.75rem; color: var(--color-primary);">Assign Logistics Entity
+                            </h5>
+
+                            <!-- 1. Select Entity Type -->
+                            <div class="form-group" style="margin-bottom: 0.75rem;">
+                                <label style="font-size: 0.75rem; color: var(--color-secondary);">1st: Select Entity
+                                    Role *</label>
+                                <select id="assign-role-select"
+                                    style="width: 100%; padding: 0.35rem 0.5rem; font-size: 0.85rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+                                    <option value="">-- Choose Role --</option>
+                                    <option value="distributor">Distributor</option>
+                                    <option value="retailer">Retailer</option>
+                                </select>
+                            </div>
+
+                            <!-- 2. Dynamic Dropdown for Distributors -->
+                            <div class="form-group" id="distributor-select-group"
+                                style="display: none; margin-bottom: 0.75rem;">
+                                <label style="font-size: 0.75rem; color: var(--color-secondary);">2nd: Select
+                                    Registered
+                                    Distributor *</label>
+                                <select id="distributor-assign-select"
+                                    style="width: 100%; padding: 0.35rem 0.5rem; font-size: 0.85rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+                                    <option value="">-- Choose Distributor --</option>
+                                </select>
+                            </div>
+
+                            <!-- 2. Dynamic Dropdown for Retailers -->
+                            <div class="form-group" id="retailer-select-group"
+                                style="display: none; margin-bottom: 0.75rem;">
+                                <label style="font-size: 0.75rem; color: var(--color-secondary);">2nd: Select
+                                    Registered
+                                    Retailer *</label>
+                                <select id="retailer-assign-select"
+                                    style="width: 100%; padding: 0.35rem 0.5rem; font-size: 0.85rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+                                    <option value="">-- Choose Retailer --</option>
+                                </select>
+                            </div>
+
+                            <!-- 3. Target Customer Username -->
+                            <div class="form-group" style="margin-bottom: 0.75rem;">
+                                <label style="font-size: 0.75rem; color: var(--color-secondary);">3rd: Target Customer
+                                    Username *</label>
+                                <input type="text" id="assign-target-customer"
+                                    placeholder="Enter customer username (e.g. alice)" required
+                                    style="width: 100%; padding: 0.35rem 0.5rem; font-size: 0.85rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+                            </div>
+
+                            <!-- Auto-Fetched Location Information -->
+                            <div id="entity-location-info"
+                                style="display: none; background: rgba(255, 255, 255, 0.03); border-left: 2px solid var(--accent); padding: 0.5rem 0.75rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.8rem; margin-bottom: 1rem;">
+                                <strong style="color: var(--color-primary);">Registered Location Details:</strong>
+                                <div style="margin-top: 0.25rem; color: var(--color-secondary);"
+                                    id="entity-location-address">-</div>
+                                <div style="margin-top: 0.15rem; color: var(--accent); font-family: monospace;"
+                                    id="entity-location-coords">-</div>
+                            </div>
+
+                            <div style="display:flex; gap:0.5rem; justify-content: flex-end;">
+                                <button type="button" class="btn btn-secondary" id="btn-cancel-logistics-form"
+                                    style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">Cancel</button>
+                                <button type="button" class="btn btn-primary" id="btn-submit-logistics"
+                                    style="padding: 0.35rem 0.6rem; font-size: 0.8rem;" disabled>Assign</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Supply Chain Journey / Timeline Section -->
+                    <div class="card" style="padding: 1.25rem; background-color: var(--bg-tertiary);">
+                        <h4
+                            style="color: var(--color-primary); margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; font-size: 1.05rem;">
+                            ⛓️ Logistics Journey Timeline</h4>
+                        <div id="journey-timeline-content"
+                            style="max-height: 250px; overflow-y: auto; padding-right: 0.5rem; display: flex; flex-direction: column; gap: 0.75rem; position: relative;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer / Delete block -->
+            <div
+                style="display: flex; justify-content: space-between; border-top: 1px solid var(--card-border); padding-top: 1.25rem;">
+                <button type="button" class="btn btn-secondary" id="btn-qrcode-zoom"
+                    style="padding: 0.5rem 1rem; font-size: 0.9rem;">🔎 View QR Code</button>
+                <button type="button" class="btn btn-danger" id="btn-delete-product"
+                    style="padding: 0.5rem 1.2rem; font-size: 0.9rem;">🗑 Delete Product Profile</button>
+            </div>
+        </div>
+    </div>
+    <div id="qr-modal" class="modal-backdrop" style="display: none;">
+        <div class="modal-content" style="max-width: 380px; text-align: center;">
+            <h3 id="qr-modal-title" style="margin-bottom: 1rem;">Product QR Code</h3>
+            <div
+                style="background-color: white; padding: 1rem; border-radius: var(--radius-md); display: inline-block; margin-bottom: 1.5rem;">
+                <img id="qr-modal-img" src="" alt="QR" style="max-width: 250px; display: block;">
+            </div>
+            <div>
+                <a href="" id="qr-modal-download" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;"
+                    download>
+                    Download QR Code
+                </a>
+                <button class="btn btn-secondary" style="width: 100%;" onclick="closeQrModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/records.js"></script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+</body>
+
+</html>

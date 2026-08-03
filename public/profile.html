@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoLedger - Profile & Settings</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="/icons/icon.svg">
+</head>
+
+<body>
+
+    <!-- Header is generated dynamically by utils.js -->
+
+    <div class="container" style="max-width: 600px; padding: 2rem 1rem;">
+        <div class="hero" style="text-align: center; margin-bottom: 2rem;">
+            <h1>Profile & Settings</h1>
+            <p>Update your contact details and change your account security settings.</p>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Profile Information Section -->
+        <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
+            <h3
+                style="color: var(--color-primary); margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem;">
+                🕵️ Personal Details</h3>
+            <form id="profile-info-form">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="color: var(--color-secondary); font-size: 0.85rem;">Username</label>
+                    <input type="text" id="profile-username" readonly disabled
+                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: rgba(255,255,255,0.02); border: 1px solid var(--card-border); color: var(--color-secondary); border-radius: var(--radius-sm); cursor: not-allowed;">
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="color: var(--color-secondary); font-size: 0.85rem;">System Role</label>
+                    <input type="text" id="profile-role" readonly disabled
+                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: rgba(255,255,255,0.02); border: 1px solid var(--card-border); color: var(--color-secondary); border-radius: var(--radius-sm); cursor: not-allowed; text-transform: uppercase;">
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="color: var(--color-secondary); font-size: 0.85rem;">Email Address</label>
+                    <input type="email" id="profile-email" placeholder="e.g. yourname@example.com"
+                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Email Address</button>
+            </form>
+        </div>
+
+        <!-- Password Change Section -->
+        <div class="card" style="padding: 2rem;">
+            <h3
+                style="color: var(--color-primary); margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem;">
+                🔒 Security Credentials</h3>
+            <form id="profile-password-form">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="color: var(--color-secondary); font-size: 0.85rem;">Current Password</label>
+                    <input type="password" id="current-password" placeholder="Enter current password" required
+                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="color: var(--color-secondary); font-size: 0.85rem;">New Password</label>
+                    <input type="password" id="new-password" placeholder="Enter new password" required
+                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="color: var(--color-secondary); font-size: 0.85rem;">Confirm New Password</label>
+                    <input type="password" id="confirm-password" placeholder="Retype new password" required
+                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+                </div>
+                <button type="submit" class="btn btn-secondary" style="width: 100%;">Update Security
+                    Credentials</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/profile.js"></script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+</body>
+
+</html>

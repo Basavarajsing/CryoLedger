@@ -1,0 +1,242 @@
+[
+  {
+    "line": 111,
+    "method": "POST",
+    "path": "/api/auth/register"
+  },
+  {
+    "line": 144,
+    "method": "POST",
+    "path": "/api/auth/login"
+  },
+  {
+    "line": 181,
+    "method": "POST",
+    "path": "/api/auth/forgot-password"
+  },
+  {
+    "line": 213,
+    "method": "POST",
+    "path": "/api/auth/reset-password"
+  },
+  {
+    "line": 251,
+    "method": "POST",
+    "path": "/add-product"
+  },
+  {
+    "line": 360,
+    "method": "GET",
+    "path": "/products"
+  },
+  {
+    "line": 371,
+    "method": "GET",
+    "path": "/product/:productId"
+  },
+  {
+    "line": 406,
+    "method": "GET",
+    "path": "/api/public/stats"
+  },
+  {
+    "line": 474,
+    "method": "GET",
+    "path": "/api/public/user-locations"
+  },
+  {
+    "line": 557,
+    "method": "GET",
+    "path": "/verify/:productId"
+  },
+  {
+    "line": 988,
+    "method": "POST",
+    "path": "/request-access"
+  },
+  {
+    "line": 1067,
+    "method": "GET",
+    "path": "/request-status/:productId"
+  },
+  {
+    "line": 1097,
+    "method": "GET",
+    "path": "/admin/requests"
+  },
+  {
+    "line": 1125,
+    "method": "POST",
+    "path": "/admin/request/:id/approve"
+  },
+  {
+    "line": 1145,
+    "method": "POST",
+    "path": "/admin/request/:id/reject"
+  },
+  {
+    "line": 1165,
+    "method": "GET",
+    "path": "/product/:productId/history"
+  },
+  {
+    "line": 1180,
+    "method": "GET",
+    "path": "/api/admin/dashboard-stats"
+  },
+  {
+    "line": 1324,
+    "method": "POST",
+    "path": "/api/admin/recall-product"
+  },
+  {
+    "line": 1362,
+    "method": "POST",
+    "path": "/api/admin/recall-batch"
+  },
+  {
+    "line": 1393,
+    "method": "POST",
+    "path": "/api/admin/cancel-recall"
+  },
+  {
+    "line": 1433,
+    "method": "POST",
+    "path": "/api/admin/product/:productId/repair"
+  },
+  {
+    "line": 1462,
+    "method": "GET",
+    "path": "/api/admin/rating-stats"
+  },
+  {
+    "line": 1519,
+    "method": "GET",
+    "path": "/api/admin/distributors"
+  },
+  {
+    "line": 1528,
+    "method": "POST",
+    "path": "/api/admin/distributor"
+  },
+  {
+    "line": 1556,
+    "method": "PUT",
+    "path": "/api/admin/distributor/:id"
+  },
+  {
+    "line": 1565,
+    "method": "DELETE",
+    "path": "/api/admin/distributor/:id"
+  },
+  {
+    "line": 1580,
+    "method": "POST",
+    "path": "/api/distributor/profile"
+  },
+  {
+    "line": 1614,
+    "method": "GET",
+    "path": "/api/admin/retailers"
+  },
+  {
+    "line": 1623,
+    "method": "POST",
+    "path": "/api/admin/retailer"
+  },
+  {
+    "line": 1651,
+    "method": "PUT",
+    "path": "/api/admin/retailer/:id"
+  },
+  {
+    "line": 1660,
+    "method": "DELETE",
+    "path": "/api/admin/retailer/:id"
+  },
+  {
+    "line": 1674,
+    "method": "POST",
+    "path": "/api/retailer/profile"
+  },
+  {
+    "line": 1708,
+    "method": "POST",
+    "path": "/api/admin/product/:productId/assign-distributor"
+  },
+  {
+    "line": 1805,
+    "method": "POST",
+    "path": "/api/admin/product/:productId/assign-retailer"
+  },
+  {
+    "line": 1922,
+    "method": "POST",
+    "path": "/api/distributor/receive"
+  },
+  {
+    "line": 1977,
+    "method": "POST",
+    "path": "/api/distributor/reject"
+  },
+  {
+    "line": 2019,
+    "method": "POST",
+    "path": "/api/distributor/transfer"
+  },
+  {
+    "line": 2100,
+    "method": "POST",
+    "path": "/api/retailer/receive"
+  },
+  {
+    "line": 2160,
+    "method": "POST",
+    "path": "/api/retailer/dispatch"
+  },
+  {
+    "line": 2215,
+    "method": "GET",
+    "path": "/api/distributor/assigned-products"
+  },
+  {
+    "line": 2228,
+    "method": "GET",
+    "path": "/api/retailer/assigned-products"
+  },
+  {
+    "line": 2246,
+    "method": "GET",
+    "path": "/api/notifications"
+  },
+  {
+    "line": 2257,
+    "method": "POST",
+    "path": "/api/notifications/read"
+  },
+  {
+    "line": 2275,
+    "method": "GET",
+    "path": "/api/user/profile"
+  },
+  {
+    "line": 2295,
+    "method": "POST",
+    "path": "/api/user/profile"
+  },
+  {
+    "line": 2353,
+    "method": "POST",
+    "path": "/api/product/feedback"
+  },
+  {
+    "line": 2400,
+    "method": "POST",
+    "path": "/api/product/return-recall"
+  },
+  {
+    "line": 2454,
+    "method": "DELETE",
+    "path": "/api/admin/product/:productId"
+  }
+]

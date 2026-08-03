@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoLedger - Customer Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="/icons/icon.svg">
+</head>
+
+<body>
+
+    <!-- Header is generated dynamically by utils.js -->
+
+    <div class="container" style="max-width: 800px;">
+        <div class="hero">
+            <h1>Customer Access Gateway</h1>
+            <p id="welcome-message">Welcome back! Access product verification tools and request geographical
+                distribution overrides.</p>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Main Navigation Grid -->
+        <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 2rem;">
+
+            <!-- Card: Verify Product -->
+            <div class="card" style="padding: 2.5rem 2rem; border-color: rgba(16, 185, 129, 0.2);">
+                <div class="card-icon">🔍</div>
+                <h3 class="card-title" style="font-size: 1.5rem; margin-bottom: 0.75rem;">Verify Product Authenticity
+                </h3>
+                <p class="card-description" style="font-size: 1.05rem; margin-bottom: 1.5rem;">
+                    Perform instant cryptographic signature and location-based validation on your product. Inspect
+                    manufacturer records and trace registered distribution hubs.
+                </p>
+                <a href="verify.html" class="btn btn-primary"
+                    style="padding: 1rem 2rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    🔐 Enter Verification Module &rarr;
+                </a>
+            </div>
+
+            <!-- Card: Tech Explanation -->
+            <div class="card" style="padding: 2rem; background-color: rgba(19, 28, 49, 0.4);">
+                <h3 style="margin-bottom: 1rem; color: var(--color-primary); font-size: 1.2rem;">Location Verification
+                    Policy</h3>
+                <p style="color: var(--color-secondary); font-size: 0.95rem; line-height: 1.6;">
+                    For product safety and anti-diversion compliance, CryoLedger enforces location checks. If you scan
+                    the product outside of designated distribution limits, detailed descriptions will be withheld. You
+                    may petition for a one-time administrative bypass request (inspected and approved by the
+                    manufacturer's security officer) to view genuine validation metrics.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script>
+        // Guard: Only allow logged-in customers
+        checkAccess('user');
+
+        // Create Role-specific Header
+        createHeader('home');
+        createFooter();
+
+        // Custom welcome
+        const username = localStorage.getItem('username');
+        if (username) {
+            document.getElementById('welcome-message').innerText = `Welcome back, ${username}! Access product verification tools and request geographical distribution overrides.`;
+        }
+    </script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+
+add-product.html:7:    <title>CryoLedger - Add Product</title>
+add-product.html:38:                    <input type="text" id="prod-id" placeholder="e.g. CRYO-723A-98">
+add-product.html:48:                    <input type="text" id="mfg-name" placeholder="e.g. CryoLabs Corporation">
+add-product.html:54:                        <input type="text" id="prod-brand" placeholder="e.g. CryoInstruments">
+admin-dashboard.html:7:    <title>CryoLedger - Admin Dashboard</title>
+admin-login.html:7:    <title>CryoLedger - Admin Portal</title>
+admin.html:7:    <title>CryoLedger - Admin Panel</title>
+distributor-dashboard.html:7:    <title>CryoLedger - Depot Logistics Hub</title>
+index.html:7:  <title>CryoLedger - Secure Product Authentication System</title>
+index.html:25:      <source src="assets/cryoledger.mp4?v=1.2" type="video/mp4">
+index.html:35:      <span>Explore CryoLedger</span>
+index.html:242:        CryoLedger provides end-to-end assurance through dynamic JWT session tokens, strict role separation (Admins
+login.html:7:    <title>CryoLedger - Customer Access</title>
+profile.html:7:    <title>CryoLedger - Profile & Settings</title>
+records.html:7:    <title>CryoLedger - Product Records</title>
+retailer-dashboard.html:7:    <title>CryoLedger - Retail Outlet portal</title>
+user-dashboard.html:7:    <title>CryoLedger - Customer Dashboard</title>
+user-dashboard.html:48:                    For product safety and anti-diversion compliance, CryoLedger enforces location checks. If you scan
+verify.html:7:    <title>CryoLedger - Verify Product</title>
+
+
+js\utils.js:1:// CryoLedger Frontend Utilities
+js\utils.js:213:        ❄️ Cryo<span>Ledger</span>
+js\utils.js:328:    <p>&copy; ${new Date().getFullYear()} CryoLedger - Product Authentication & Location Verification System. All rights reserved.</p>
+

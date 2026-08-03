@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoLedger - Admin Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-container {
+            max-width: 450px;
+            width: 100%;
+            margin: 4rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--card-border);
+        }
+
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            color: var(--color-secondary);
+            font-weight: 600;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .auth-tab.active {
+            color: var(--info);
+            border-bottom-color: var(--info);
+        }
+
+        .auth-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-title h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-title p {
+            color: var(--color-secondary);
+            font-size: 0.95rem;
+        }
+    </style>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="/icons/icon.svg">
+</head>
+
+<body>
+
+    <!-- Header is generated dynamically by utils.js -->
+
+    <div class="container">
+        <div class="auth-container">
+
+            <div class="auth-title">
+                <h2>Manufacturer Portal</h2>
+                <p>Manage product serials, download secure QRs, and process bypass approvals.</p>
+            </div>
+
+            <div class="card" style="padding: 2.5rem 2rem; border-color: rgba(59, 130, 246, 0.2);">
+                <div class="auth-tabs">
+                    <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Admin Log In</div>
+                    <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">New Admin Registration
+                    </div>
+                </div>
+
+                <div id="alert-container"></div>
+
+                <!-- Login Form -->
+                <form id="form-login" onsubmit="handleAuthSubmit(event, 'login')">
+                    <div class="form-group">
+                        <label for="login-username">Admin Username</label>
+                        <input type="text" id="login-username" placeholder="Enter administrator username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; margin-top: 1rem; padding: 1rem; background-color: var(--info);">
+                        🛡️ Access Admin Console
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="form-register" onsubmit="handleAuthSubmit(event, 'register')" style="display: none;">
+                    <div class="form-group">
+                        <label for="register-username">New Admin Username</label>
+                        <input type="text" id="register-username" placeholder="Choose admin username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input type="email" id="register-email" placeholder="Enter administrator email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" placeholder="Choose a secure password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm">Confirm Password</label>
+                        <input type="password" id="register-confirm" placeholder="Repeat your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; margin-top: 1rem; padding: 1rem; background-color: var(--accent);">
+                        ✨ Register New Administrator
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="index.html"
+                        style="color: var(--color-secondary); text-decoration: none; font-size: 0.9rem;">
+                        &larr; Back to Main Portal Selector
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script>
+        // Create guest page header/footer
+        createHeader();
+        createFooter();
+
+        // Prevent access if already logged in
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+        if (token && role === 'admin') {
+            window.location.href = 'admin-dashboard.html';
+        } else if (token && role === 'user') {
+            window.location.href = 'user-dashboard.html';
+        }
+
+        function switchAuthTab(type) {
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-register').classList.remove('active');
+            document.getElementById('form-login').style.display = 'none';
+            document.getElementById('form-register').style.display = 'none';
+
+            if (type === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('form-login').style.display = 'block';
+            } else {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('form-register').style.display = 'block';
+            }
+        }
+
+        async function handleAuthSubmit(event, mode) {
+            event.preventDefault();
+
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = ''; // Clear previous alerts
+
+            if (mode === 'login') {
+                const usernameVal = document.getElementById('login-username').value.trim();
+                const passwordVal = document.getElementById('login-password').value;
+
+                try {
+                    const res = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: usernameVal, password: passwordVal, role: 'admin' })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('role', data.role);
+                        localStorage.setItem('username', usernameVal);
+                        showAlert("Administrator Login successful! Redirecting...", "success");
+                        setTimeout(() => {
+                            window.location.href = 'admin-dashboard.html';
+                        }, 1000);
+                    } else {
+                        showAlert(data.message || "Login failed.", "error");
+                    }
+                } catch (error) {
+                    showAlert("Connection error.", "error");
+                }
+            } else {
+                const usernameVal = document.getElementById('register-username').value.trim();
+                const emailVal = document.getElementById('register-email').value.trim();
+                const passwordVal = document.getElementById('register-password').value;
+                const confirmVal = document.getElementById('register-confirm').value;
+
+                if (passwordVal !== confirmVal) {
+                    showAlert("Passwords do not match.", "error");
+                    return;
+                }
+
+                try {
+                    const res = await fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: usernameVal, email: emailVal, password: passwordVal, role: 'admin' })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        showAlert("Administrator registration successful! Please log in.", "success");
+                        switchAuthTab('login');
+                        document.getElementById('login-username').value = usernameVal;
+                    } else {
+                        showAlert(data.message || "Registration failed.", "error");
+                    }
+                } catch (error) {
+                    showAlert("Connection error.", "error");
+                }
+            }
+        }
+    </script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+</body>
+
+</html>

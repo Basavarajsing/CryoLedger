@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoLedger - Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="/icons/icon.svg">
+</head>
+
+<body>
+
+    <!-- Header is generated dynamically by utils.js -->
+
+    <div class="container">
+        <div class="hero">
+            <h1>Anti-Counterfeit & Authorized Distribution Console</h1>
+            <p id="welcome-message">Manufacturer administration control panel for registering products and monitoring
+                geographical distribution verification statistics.</p>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Dashboard Statistics Quick Cards -->
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+            <div class="card" style="text-align: center; padding: 1.5rem; border-color: rgba(16, 185, 129, 0.2);">
+                <div id="stat-products" style="font-size: 2.25rem; font-weight: 800; color: var(--accent);">-</div>
+                <div
+                    style="font-size: 0.8rem; color: var(--color-secondary); font-weight: 600; text-transform: uppercase; margin-top: 0.5rem;">
+                    Registered Products</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 1.5rem; border-color: rgba(241, 196, 15, 0.2);">
+                <div id="stat-requests" style="font-size: 2.25rem; font-weight: 800; color: var(--warning);">-</div>
+                <div
+                    style="font-size: 0.8rem; color: var(--color-secondary); font-weight: 600; text-transform: uppercase; margin-top: 0.5rem;">
+                    Pending Approvals</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 1.5rem; border-color: rgba(59, 130, 246, 0.2);">
+                <div id="stat-scans" style="font-size: 2.25rem; font-weight: 800; color: var(--info);">-</div>
+                <div
+                    style="font-size: 0.8rem; color: var(--color-secondary); font-weight: 600; text-transform: uppercase; margin-top: 0.5rem;">
+                    Total Scans (Auth / Unauth)</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 1.5rem; border-color: rgba(239, 68, 68, 0.2);">
+                <div id="stat-warranties" style="font-size: 2.25rem; font-weight: 800; color: #a855f7;">-</div>
+                <div
+                    style="font-size: 0.8rem; color: var(--color-secondary); font-weight: 600; text-transform: uppercase; margin-top: 0.5rem;">
+                    Active Warranties</div>
+            </div>
+            <div class="card" style="text-align: center; padding: 1.5rem; border-color: rgba(239, 68, 68, 0.2);">
+                <div id="stat-recalls" style="font-size: 2.25rem; font-weight: 800; color: var(--error);">-</div>
+                <div
+                    style="font-size: 0.8rem; color: var(--color-secondary); font-weight: 600; text-transform: uppercase; margin-top: 0.5rem;">
+                    Active Recalls</div>
+            </div>
+        </div>
+
+        <!-- Charts Area -->
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2.5rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <div class="card" style="padding: 1.5rem;">
+                    <h3 style="margin-bottom: 1.25rem; font-size:1.1rem;">🛡️ Authentication Scan Security Audit</h3>
+                    <div
+                        style="height: 250px; position: relative; display: flex; align-items: center; justify-content: center;">
+                        <canvas id="chart-auth"></canvas>
+                    </div>
+                </div>
+                <div class="card" style="padding: 1.5rem;">
+                    <h3 style="margin-bottom: 1.25rem; font-size:1.1rem;">📈 Monthly System Ingestion Trend</h3>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="chart-monthly"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section: Top Scanned and Ratings -->
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2.5rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 2rem;">
+                <!-- Top Verified Products card -->
+                <div class="card" style="padding: 1.5rem;">
+                    <h3 style="margin-bottom:1rem;">🔥 Most Scanned High-Traffic Products</h3>
+                    <div style="overflow-x: auto;">
+                        <table class="table" style="width: 100%; border-collapse: collapse; text-align: left;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--card-border);">
+                                    <th style="padding: 0.75rem;">Product ID</th>
+                                    <th style="padding: 0.75rem;">Name</th>
+                                    <th style="padding: 0.75rem; text-align: right;">Scan Count</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-products-table-body">
+                                <tr>
+                                    <td colspan="3"
+                                        style="text-align: center; color: var(--color-secondary); padding: 1.5rem;">
+                                        Loading
+                                        statistics...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Ratings Analytics card -->
+                <div class="card" style="padding: 1.5rem; display: flex; flex-direction: column;">
+                    <h3 style="margin-bottom:1.25rem;">⭐ Customer Feedback Rating Analytics</h3>
+                    <div style="display: flex; gap: 2rem; align-items: center; margin-bottom: 1.5rem;">
+                        <div
+                            style="text-align: center; background: rgba(255,255,255,0.02); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--card-border); min-width: 120px;">
+                            <div id="stat-avg-rating"
+                                style="font-size: 2.5rem; font-weight: 800; color: var(--accent);">0.0</div>
+                            <div style="font-size: 0.75rem; color: var(--color-secondary); margin-top: 0.25rem;">Average
+                                Rating</div>
+                        </div>
+                        <div style="flex-grow: 1;">
+                            <div style="font-size: 0.9rem; margin-bottom: 0.4rem; font-weight: 600;">Total Ratings
+                                Count: <span id="stat-total-ratings" style="color: var(--color-primary);">0</span></div>
+                            <div id="rating-distribution-bars"
+                                style="display: flex; flex-direction: column; gap: 0.4rem;">
+                                <!-- Bars will load dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        style="overflow-y: auto; max-height: 180px; flex-grow: 1; border-top: 1px dashed var(--card-border); padding-top: 1rem;">
+                        <h4
+                            style="font-size: 0.85rem; color: var(--color-secondary); text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em;">
+                            Breakdown per Product</h4>
+                        <table class="table"
+                            style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+                            <thead>
+                                <tr style="color: var(--color-secondary); border-bottom: 1px solid var(--card-border);">
+                                    <th style="padding: 0.4rem 0;">Product</th>
+                                    <th style="padding: 0.4rem 0; text-align: right;">Average</th>
+                                    <th style="padding: 0.4rem 0; text-align: right;">Ratings</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ratings-breakdown-body">
+                                <tr>
+                                    <td colspan="3"
+                                        style="text-align: center; color: var(--color-secondary); padding: 1rem 0;">
+                                        Loading rating breakdown...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Navigation Grid -->
+        <div class="dashboard-grid">
+            <!-- Card 1: Add Product -->
+            <div class="card">
+                <div class="card-icon">➕</div>
+                <h3 class="card-title">Add & Register Product</h3>
+                <p class="card-description">Register details, mark manufacturer coordinates, assign multiple authorized
+                    centers, and generate a secure, scanable QR code.</p>
+                <a href="add-product.html" class="card-action">Register Product &rarr;</a>
+            </div>
+
+            <!-- Card 2: Admin Requests -->
+            <div class="card">
+                <div class="card-icon">🛡️</div>
+                <h3 class="card-title">Bypass Override Panel</h3>
+                <p class="card-description">Review location authorization bypass requests from users outside of
+                    designated distribution zones. Approve or reject requests.</p>
+                <a href="admin.html" class="card-action">Bypass Console &rarr;</a>
+            </div>
+
+            <!-- Card 3: Product Records -->
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h3 class="card-title">Product Audit Records</h3>
+                <p class="card-description">Explore all system-registered products, view scan histories, preview and
+                    share QR codes, and examine geographical verification timelines.</p>
+                <a href="records.html" class="card-action">Audit Directory &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ChartJS library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        // Guard: Only allow logged-in administrators
+        checkAccess('admin');
+
+        // Initialize Navigation & Footer
+        createHeader('home');
+        createFooter();
+
+        // Custom welcome
+        const username = localStorage.getItem('username');
+        if (username) {
+            document.getElementById('welcome-message').innerText = `Welcome, Administrator ${username}! Use this panel to register product batches, monitor access requests, and review audit trails.`;
+        }
+
+        let chartAuthInstance = null;
+        let chartMonthlyInstance = null;
+
+        // Load Dashboard Statistics (calls are authenticated)
+        async function loadStats() {
+            try {
+                const res = await authenticatedFetch('/api/admin/dashboard-stats');
+                const result = await res.json();
+
+                if (result.success) {
+                    const summary = result.summary;
+                    document.getElementById('stat-products').innerText = summary.totalProducts;
+                    document.getElementById('stat-requests').innerText = summary.pendingRequests;
+
+                    const totalScans = (summary.successfulVerifications || 0) + (summary.unauthorizedAttempts || 0);
+                    document.getElementById('stat-scans').innerText = `${totalScans} (${summary.successfulVerifications} / ${summary.unauthorizedAttempts})`;
+
+                    document.getElementById('stat-warranties').innerText = summary.activeWarranties;
+                    document.getElementById('stat-recalls').innerText = summary.activeRecalls;
+
+                    // Render Top Products Table
+                    const tblBody = document.getElementById('top-products-table-body');
+                    tblBody.innerHTML = '';
+                    const topProds = result.charts.topVerifiedProducts || [];
+                    if (topProds.length === 0) {
+                        tblBody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:1rem; color:var(--color-secondary);">No scan activities tracked yet.</td></tr>';
+                    } else {
+                        topProds.forEach(p => {
+                            const tr = document.createElement('tr');
+                            tr.style.borderBottom = '1px solid var(--card-border)';
+                            tr.innerHTML = `
+                                <td style="padding:0.75rem; font-family:monospace; font-size:0.85rem; color:var(--color-secondary);">${p.productId}</td>
+                                <td style="padding:0.75rem; font-weight:600; color:var(--color-primary);">${p.name}</td>
+                                <td style="padding:0.75rem; text-align:right; font-weight:700; color:var(--accent);">${p.scanCount}</td>
+                            `;
+                            tblBody.appendChild(tr);
+                        });
+                    }
+
+                    // Render Charts
+                    renderCharts(result.charts);
+                } else {
+                    showAlert(result.message || "Failed to load dashboard metrics.", "error");
+                }
+            } catch (err) {
+                console.error("Failed to load statistics:", err);
+                showAlert("Error loading live dashboard statistics.", "error");
+            }
+        }
+
+        async function loadRatingStats() {
+            try {
+                const res = await authenticatedFetch('/api/admin/rating-stats');
+                const result = await res.json();
+
+                if (result.success && result.data) {
+                    const data = result.data;
+                    document.getElementById('stat-avg-rating').innerText = data.averageRating.toFixed(1);
+                    document.getElementById('stat-total-ratings').innerText = data.totalCount;
+
+                    // Distribution bars
+                    const distContainer = document.getElementById('rating-distribution-bars');
+                    distContainer.innerHTML = '';
+
+                    const distribution = data.distribution || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+                    const maxVal = Math.max(...Object.values(distribution), 1);
+
+                    for (let i = 5; i >= 1; i--) {
+                        const count = distribution[i] || 0;
+                        const pct = (count / maxVal) * 100;
+                        const row = document.createElement('div');
+                        row.style.display = 'flex';
+                        row.style.alignItems = 'center';
+                        row.style.gap = '0.5rem';
+                        row.style.fontSize = '0.75rem';
+
+                        row.innerHTML = `
+                            <div style="width: 12px; color: var(--color-secondary); font-weight:bold;">${i}</div>
+                            <div style="flex-grow: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                                <div style="height: 100%; width: ${pct}%; background: var(--accent); border-radius: 3px;"></div>
+                            </div>
+                            <div style="width: 20px; text-align: right; color: var(--color-secondary);">${count}</div>
+                        `;
+                        distContainer.appendChild(row);
+                    }
+
+                    // Product breakdown table
+                    const tableBody = document.getElementById('ratings-breakdown-body');
+                    tableBody.innerHTML = '';
+                    const breakdown = data.productBreakdown || [];
+
+                    if (breakdown.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:1.5rem; color:var(--color-secondary);">No product reviews found.</td></tr>';
+                    } else {
+                        breakdown.forEach(item => {
+                            const tr = document.createElement('tr');
+                            tr.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
+                            tr.innerHTML = `
+                                <td style="padding:0.4rem 0;">
+                                    <strong style="color:var(--color-primary);">${item.name}</strong>
+                                    <div style="font-size:0.75rem; color:var(--color-secondary); font-family:monospace;">${item.productId}</div>
+                                </td>
+                                <td style="padding:0.4rem 0; text-align:right; font-weight:700; color:var(--accent);">★ ${item.averageRating.toFixed(1)}</td>
+                                <td style="padding:0.4rem 0; text-align:right; color:var(--color-secondary);">${item.count}</td>
+                            `;
+                            tableBody.appendChild(tr);
+                        });
+                    }
+
+                } else {
+                    showAlert(result.message || "Failed loading rating metrics.", "error");
+                }
+            } catch (err) {
+                console.error(err);
+                showAlert("Error loading customer rating aggregate visualizers.", "error");
+            }
+        }
+
+        function renderCharts(chartsData) {
+            // Chart 1: Auth vs Unauth Scan Breakdown
+            const authCtx = document.getElementById('chart-auth').getContext('2d');
+            if (chartAuthInstance) chartAuthInstance.destroy();
+
+            const hasData = (chartsData.authVsUnauth.authorized + chartsData.authVsUnauth.unauthorized) > 0;
+            const dataVals = hasData ? [chartsData.authVsUnauth.authorized, chartsData.authVsUnauth.unauthorized] : [1, 0];
+            const displayColors = hasData ? ['#10b981', '#ef4444'] : ['#475569', '#475569'];
+
+            chartAuthInstance = new Chart(authCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: hasData ? ['Genuine (Authorized)', 'Risk Alert (Unauthorized)'] : ['No Data Tracks Logged', ''],
+                    datasets: [{
+                        data: dataVals,
+                        backgroundColor: displayColors,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', font: { family: 'Outfit, Inter' } }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Monthly Ingestions
+            const monthlyCtx = document.getElementById('chart-monthly').getContext('2d');
+            if (chartMonthlyInstance) chartMonthlyInstance.destroy();
+
+            const months = Object.keys(chartsData.monthlyProducts || {}).sort();
+            const counts = months.map(m => chartsData.monthlyProducts[m]);
+
+            chartMonthlyInstance = new Chart(monthlyCtx, {
+                type: 'line',
+                data: {
+                    labels: months.map(m => {
+                        const [yr, mn] = m.split('-');
+                        const dateObj = new Date(yr, parseInt(mn) - 1, 1);
+                        return dateObj.toLocaleString('default', { month: 'short', year: '2-digit' });
+                    }),
+                    datasets: [{
+                        label: 'Product Registrations',
+                        data: counts,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        loadStats();
+        loadRatingStats();
+    </script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+</body>
+
+</html>

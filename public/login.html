@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoLedger - Customer Access</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .auth-container {
+            max-width: 460px;
+            width: 100%;
+            margin: 4rem auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--card-border);
+        }
+
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            color: var(--color-secondary);
+            font-weight: 600;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .auth-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .auth-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-title h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-title p {
+            color: var(--color-secondary);
+            font-size: 0.95rem;
+        }
+
+        .glass-portal-card {
+            background: rgba(19, 28, 49, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 2rem;
+            transition: var(--transition);
+        }
+
+        .glass-portal-card:hover {
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+
+        .password-input-wrapper {
+            position: relative;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--color-secondary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            user-select: none;
+            padding: 4px 6px;
+            transition: var(--transition);
+        }
+
+        .password-toggle-btn:hover {
+            color: var(--accent);
+        }
+
+        .btn-loading-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .spinner-loader {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="/icons/icon.svg">
+</head>
+
+<body>
+
+    <!-- Animated Matrix Particles Background Canvas -->
+    <canvas id="canvas-bg"
+        style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:-1; pointer-events:none;"></canvas>
+
+    <!-- Header will load dynamically -->
+
+    <div class="container">
+        <div class="auth-container">
+
+            <div class="auth-title">
+                <h2>Customer Portal</h2>
+                <p>Verify product authenticity and check blockchain logs.</p>
+            </div>
+
+            <div class="glass-portal-card">
+                <div class="auth-tabs" id="portal-tab-bar">
+                    <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign In</div>
+                    <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register</div>
+                </div>
+
+                <div id="alert-container"></div>
+
+                <!-- Login Form -->
+                <form id="form-login" onsubmit="handleAuthSubmit(event, 'login')">
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" placeholder="Enter username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="login-password" placeholder="Enter password" required>
+                            <button type="button" class="password-toggle-btn"
+                                onclick="togglePassView('login-password', this)">SHOW</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-role">Portal Role</label>
+                        <select id="login-role"
+                            style="background-color: var(--bg-tertiary); color: var(--color-primary);">
+                            <option value="user">Customer (User)</option>
+                            <option value="distributor">Distributor Depot</option>
+                            <option value="retailer">Retail Outlet</option>
+                        </select>
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <label
+                            style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; font-size: 0.85rem; color: var(--color-secondary);">
+                            <input type="checkbox" id="remember-me" style="width: auto; margin-right: 0.25rem;">
+                            Remember username
+                        </label>
+                        <a href="#" onclick="toggleForgotPassword(true)"
+                            style="color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 600;">Forgot
+                            Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="btn-login-submit"
+                        style="width: 100%; padding: 1rem;">
+                        <span class="btn-loading-wrapper" id="login-btn-content">🔐 Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="form-register" onsubmit="handleAuthSubmit(event, 'register')" style="display: none;">
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" placeholder="Choose a username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input type="email" id="register-email" placeholder="Enter your email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="register-password" placeholder="Choose a strong password"
+                                oninput="checkPasswordStrength(this.value)" required>
+                            <button type="button" class="password-toggle-btn"
+                                onclick="togglePassView('register-password', this)">SHOW</button>
+                        </div>
+                        <!-- Password Strength Visual Meter -->
+                        <div id="password-strength-container" style="margin-top: 0.6rem; display: none;">
+                            <div
+                                style="height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; display: flex; gap: 2px;">
+                                <div id="bar-1"
+                                    style="flex:1; height: 100%; background: transparent; transition: var(--transition);">
+                                </div>
+                                <div id="bar-2"
+                                    style="flex:1; height: 100%; background: transparent; transition: var(--transition);">
+                                </div>
+                                <div id="bar-3"
+                                    style="flex:1; height: 100%; background: transparent; transition: var(--transition);">
+                                </div>
+                            </div>
+                            <span id="password-strength-text"
+                                style="font-size: 0.75rem; color: var(--color-secondary); margin-top: 0.35rem; display: inline-block; font-weight: 500;">Strength:
+                                Weak</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm">Confirm Password</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="register-confirm" placeholder="Repeat your password" required>
+                            <button type="button" class="password-toggle-btn"
+                                onclick="togglePassView('register-confirm', this)">SHOW</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-role">Select Registry Role</label>
+                        <select id="register-role"
+                            style="background-color: var(--bg-tertiary); color: var(--color-primary);">
+                            <option value="user">Customer (User)</option>
+                            <option value="distributor">Distributor Depot</option>
+                            <option value="retailer">Retail Outlet</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btn-register-submit"
+                        style="width: 100%; padding: 1rem; background-color: var(--info);">
+                        <span class="btn-loading-wrapper" id="register-btn-content">✨ Register Account</span>
+                    </button>
+                </form>
+
+                <!-- Forgot Password Form -->
+                <form id="form-forgot" onsubmit="handleForgotSubmit(event)" style="display: none;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.15rem; color: var(--color-primary);">Reset Credentials
+                    </h3>
+                    <p style="font-size: 0.85rem; color: var(--color-secondary); margin-bottom: 1.5rem;">Enter your
+                        username and email to receive passport security credentials reset link.</p>
+                    <div class="form-group">
+                        <label for="forgot-username">Username</label>
+                        <input type="text" id="forgot-username" placeholder="Enter username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="forgot-email">Email Address</label>
+                        <input type="email" id="forgot-email" placeholder="Enter email address" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btn-forgot-submit"
+                        style="width: 100%; padding: 1rem; background-color: var(--warning);">
+                        <span class="btn-loading-wrapper" id="forgot-btn-content">📤 Request Reset Link</span>
+                    </button>
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <a href="#" onclick="toggleForgotPassword(false)"
+                            style="color: var(--color-secondary); text-decoration: none; font-size: 0.85rem;">&larr;
+                            Back to Sign In</a>
+                    </div>
+                </form>
+
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="index.html"
+                        style="color: var(--color-secondary); text-decoration: none; font-size: 0.9rem;">
+                        &larr; Back to Main Portal Selector
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script>
+        // Create guest page header/footer
+        createHeader();
+        createFooter();
+
+        // Canvas Particle Background
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Create particles
+        for (let i = 0; i < 45; i++) {
+            particles.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                radius: Math.random() * 2 + 1
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.08)';
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.03)';
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    let p2 = particles[j];
+                    let dx = p.x - p2.x;
+                    let dy = p.y - p2.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Toggle Password Visibility
+        function togglePassView(id, btn) {
+            const input = document.getElementById(id);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'HIDE';
+            } else {
+                input.type = 'password';
+                btn.textContent = 'SHOW';
+            }
+        }
+
+        // Remember Me & Prefillin Autofill
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('savedUsername');
+            if (savedUser) {
+                document.getElementById('login-username').value = savedUser;
+                document.getElementById('remember-me').checked = true;
+            }
+        });
+
+        // Trigger Show/Hide Forgot form
+        function toggleForgotPassword(show) {
+            const tabBar = document.getElementById('portal-tab-bar');
+            const alertCont = document.getElementById('alert-container');
+            alertCont.innerHTML = ''; // Reset alerts
+
+            if (show) {
+                tabBar.style.display = 'none';
+                document.getElementById('form-login').style.display = 'none';
+                document.getElementById('form-register').style.display = 'none';
+                document.getElementById('form-forgot').style.display = 'block';
+            } else {
+                tabBar.style.display = 'flex';
+                document.getElementById('form-forgot').style.display = 'none';
+                switchAuthTab('login');
+            }
+        }
+
+        // Check Password Strength
+        function checkPasswordStrength(password) {
+            const container = document.getElementById('password-strength-container');
+            const b1 = document.getElementById('bar-1');
+            const b2 = document.getElementById('bar-2');
+            const b3 = document.getElementById('bar-3');
+            const txt = document.getElementById('password-strength-text');
+
+            if (!password) {
+                container.style.display = 'none';
+                return;
+            }
+            container.style.display = 'block';
+
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (/[a-zA-Z]/.test(password) && /[0-9]/.test(password)) score++;
+            if (/[^a-zA-Z0-9]/.test(password)) score++;
+
+            // Reset
+            b1.style.background = 'transparent';
+            b2.style.background = 'transparent';
+            b3.style.background = 'transparent';
+
+            if (score === 1) {
+                b1.style.background = '#ef4444'; // Red
+                txt.textContent = 'Strength: Weak (Add letters, numbers, and symbols)';
+                txt.style.color = '#ef4444';
+            } else if (score === 2) {
+                b1.style.background = '#fbbf24'; // Orange
+                b2.style.background = '#fbbf24';
+                txt.textContent = 'Strength: Medium (Add special symbols)';
+                txt.style.color = '#fbbf24';
+            } else if (score === 3) {
+                b1.style.background = '#10b981'; // Green
+                b2.style.background = '#10b981';
+                b3.style.background = '#10b981';
+                txt.textContent = 'Strength: Strong';
+                txt.style.color = '#10b981';
+            }
+        }
+
+        // Prevent access if already logged in as user
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+        if (token && role === 'user') {
+            window.location.href = 'user-dashboard.html';
+        } else if (token && role === 'admin') {
+            window.location.href = 'admin-dashboard.html';
+        }
+
+        function switchAuthTab(type) {
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-register').classList.remove('active');
+            document.getElementById('form-login').style.display = 'none';
+            document.getElementById('form-register').style.display = 'none';
+
+            if (type === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('form-login').style.display = 'block';
+            } else {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('form-register').style.display = 'block';
+            }
+        }
+
+        async function handleForgotPasswordSubmit(event) {
+            // Placeholder/Wrapper
+        }
+
+        // Forgot password submission handler
+        async function handleForgotSubmit(event) {
+            event.preventDefault();
+            const usernameVal = document.getElementById('forgot-username').value.trim();
+            const emailVal = document.getElementById('forgot-email').value.trim();
+            const submitBtn = document.getElementById('btn-forgot-submit');
+            const submitContent = document.getElementById('forgot-btn-content');
+
+            // Set loading
+            submitBtn.disabled = true;
+            submitContent.innerHTML = '<div class="spinner-loader"></div> Processing...';
+
+            try {
+                const res = await fetch('/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: usernameVal, email: emailVal })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    showAlert(data.message, "success");
+                    setTimeout(() => {
+                        toggleForgotPassword(false);
+                    }, 5000);
+                } else {
+                    showAlert(data.message || "Reset request failed.", "error");
+                }
+            } catch (err) {
+                showAlert("Connection error checking status.", "error");
+            } finally {
+                submitBtn.disabled = false;
+                submitContent.innerHTML = '📤 Request Reset Link';
+            }
+        }
+
+        async function handleAuthSubmit(event, mode) {
+            event.preventDefault();
+
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = ''; // Clear previous alerts
+
+            if (mode === 'login') {
+                const usernameVal = document.getElementById('login-username').value.trim();
+                const passwordVal = document.getElementById('login-password').value;
+                const roleVal = document.getElementById('login-role').value;
+                const rememberMe = document.getElementById('remember-me').checked;
+
+                const submitBtn = document.getElementById('btn-login-submit');
+                const submitContent = document.getElementById('login-btn-content');
+
+                // Set loading
+                submitBtn.disabled = true;
+                submitContent.innerHTML = '<div class="spinner-loader"></div> Authenticating...';
+
+                try {
+                    const res = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: usernameVal, password: passwordVal, role: roleVal })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        // Store remember username
+                        if (rememberMe) {
+                            localStorage.setItem('savedUsername', usernameVal);
+                        } else {
+                            localStorage.removeItem('savedUsername');
+                        }
+
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('role', data.role);
+                        localStorage.setItem('username', usernameVal);
+                        showAlert("Login successful! Redirecting...", "success");
+                        setTimeout(() => {
+                            if (data.role === 'distributor') {
+                                window.location.href = 'distributor-dashboard.html';
+                            } else if (data.role === 'retailer') {
+                                window.location.href = 'retailer-dashboard.html';
+                            } else {
+                                window.location.href = 'user-dashboard.html';
+                            }
+                        }, 1000);
+                    } else {
+                        showAlert(data.message || "Login failed.", "error");
+                    }
+                } catch (error) {
+                    showAlert("Connection error.", "error");
+                } finally {
+                    submitBtn.disabled = false;
+                    submitContent.innerHTML = '🔐 Sign In';
+                }
+            } else {
+                const usernameVal = document.getElementById('register-username').value.trim();
+                const emailVal = document.getElementById('register-email').value.trim();
+                const passwordVal = document.getElementById('register-password').value;
+                const confirmVal = document.getElementById('register-confirm').value;
+                const roleVal = document.getElementById('register-role').value;
+
+                if (passwordVal !== confirmVal) {
+                    showAlert("Passwords do not match.", "error");
+                    return;
+                }
+
+                if (passwordVal.length < 8) {
+                    showAlert("Password must be at least 8 characters long.", "error");
+                    return;
+                }
+
+                const submitBtn = document.getElementById('btn-register-submit');
+                const submitContent = document.getElementById('register-btn-content');
+
+                // Set loading
+                submitBtn.disabled = true;
+                submitContent.innerHTML = '<div class="spinner-loader"></div> Registering...';
+
+                try {
+                    const res = await fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: usernameVal, password: passwordVal, role: roleVal, email: emailVal })
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.success) {
+                        showAlert("Registration successful! Please login.", "success");
+                        switchAuthTab('login');
+                        document.getElementById('login-username').value = usernameVal;
+                        document.getElementById('login-role').value = roleVal;
+                    } else {
+                        showAlert(data.message || "Registration failed.", "error");
+                    }
+                } catch (error) {
+                    showAlert("Connection error.", "error");
+                } finally {
+                    submitBtn.disabled = false;
+                    submitContent.innerHTML = '✨ Register Account';
+                }
+            }
+        }
+    </script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+</body>
+
+</html>

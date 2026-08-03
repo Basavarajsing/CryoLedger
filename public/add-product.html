@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoLedger - Add Product</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="/icons/icon.svg">
+</head>
+
+<body>
+
+    <div class="container" style="max-width: 1000px;">
+        <div style="margin-bottom: 2rem;">
+            <a href="index.html"
+                style="color: var(--color-secondary); text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.25rem;">
+                &larr; Back to Dashboard
+            </a>
+            <h2 style="font-size: 2rem; font-weight: 700; margin-top: 0.5rem;">Register New Product</h2>
+            <p style="color: var(--color-secondary);">Add product identities, set manufacturer headquarters, and
+                configure authorized distribution centers.</p>
+        </div>
+
+        <!-- Alert Container inside the page -->
+        <div id="alert-container"></div>
+
+        <div class="grid-2">
+            <!-- Left Column: Form Fields -->
+            <div class="card" style="padding: 1.75rem;">
+                <h3 style="margin-bottom: 1.5rem; color: var(--color-primary); font-size: 1.2rem;">1. Product General
+                    Details</h3>
+
+                <div class="form-group">
+                    <label for="prod-id">Product ID / Serial Number *</label>
+                    <input type="text" id="prod-id" placeholder="e.g. CRYO-723A-98">
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-name">Product Name *</label>
+                    <input type="text" id="prod-name" placeholder="e.g. High-Grade Thermometer Pro">
+                </div>
+
+                <div class="form-group">
+                    <label for="mfg-name">Manufacturer Name *</label>
+                    <input type="text" id="mfg-name" placeholder="e.g. CryoLabs Corporation">
+                </div>
+
+                <div class="grid-2" style="gap: 0.75rem; margin-top: 1rem;">
+                    <div class="form-group">
+                        <label for="prod-brand">Brand</label>
+                        <input type="text" id="prod-brand" placeholder="e.g. CryoInstruments">
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-category">Category</label>
+                        <input type="text" id="prod-category" placeholder="e.g. Sensors">
+                    </div>
+                </div>
+
+                <div class="grid-2" style="gap: 0.75rem; margin-top: 0.5rem;">
+                    <div class="form-group">
+                        <label for="prod-model">Model Number</label>
+                        <input type="text" id="prod-model" placeholder="e.g. CL-PRO-XT">
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-batch">Batch Number</label>
+                        <input type="text" id="prod-batch" placeholder="e.g. BATCH-2026-07">
+                    </div>
+                </div>
+
+                <div class="grid-2" style="gap: 0.75rem; margin-top: 0.5rem;">
+                    <div class="form-group">
+                        <label for="expiry-date">Expiry Date (Optional)</label>
+                        <input type="date" id="expiry-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-image">Product Image URL</label>
+                        <input type="text" id="prod-image" placeholder="e.g. https://example.com/item.png">
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--card-border); margin: 1.5rem 0;">
+
+                <h3 style="margin-bottom: 1.25rem; color: var(--color-primary); font-size: 1.2rem;">2. Smart Warranty
+                    Configuration</h3>
+
+                <div class="form-group">
+                    <label for="warranty-avail">Warranty Available</label>
+                    <select id="warranty-avail">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+
+                <div id="warranty-details-section" style="display: none;">
+                    <div class="grid-2" style="gap: 0.75rem; margin-bottom: 0.75rem;">
+                        <div class="form-group">
+                            <label for="warranty-period">Warranty Period (Months)</label>
+                            <input type="number" id="warranty-period" min="1" value="12" placeholder="e.g. 12">
+                        </div>
+                        <div class="form-group">
+                            <label for="warranty-type">Warranty Type</label>
+                            <input type="text" id="warranty-type" placeholder="e.g. Limited Manufacturer">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="warranty-terms">Warranty Terms & Conditions</label>
+                        <textarea id="warranty-terms" rows="2"
+                            placeholder="Describe coverage and service limitations..."></textarea>
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--card-border); margin: 1.5rem 0;">
+
+                <h3 style="margin-bottom: 1.25rem; color: var(--color-primary); font-size: 1.2rem;">2. Manufacturer
+                    Location</h3>
+
+                <div class="form-group">
+                    <label>Manufacturer Coordinates & Address *</label>
+                    <div class="grid-2" style="margin-bottom: 0.75rem; gap: 0.75rem;">
+                        <input type="text" id="mfg-lat" placeholder="Latitude" readonly>
+                        <input type="text" id="mfg-lng" placeholder="Longitude" readonly>
+                    </div>
+                    <textarea id="mfg-addr" rows="2"
+                        placeholder="Manufacturer headquarters location address (Click on map to select and set)"
+                        readonly></textarea>
+                    <button type="button" class="btn btn-secondary" id="btn-save-mfg-loc"
+                        style="width: 100%; margin-top: 0.75rem;" disabled>
+                        📍 Set Selected Map Location as Manufacturer
+                    </button>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--card-border); margin: 1.5rem 0;">
+
+                <h3 style="margin-bottom: 1rem; color: var(--color-primary); font-size: 1.2rem;">3. Configure Authorized
+                    Centres</h3>
+                <p style="font-size: 0.85rem; color: var(--color-secondary); margin-bottom: 1rem;">
+                    Select a point on the map, input the name of the center, and add it below (minimum one center
+                    required).
+                </p>
+
+
+
+                <div class="form-group">
+                    <label for="center-name">Authorized Centre Name *</label>
+                    <div class="input-with-button">
+                        <input type="text" id="center-name" placeholder="e.g. Asia Retail Hub - Bangalore">
+                        <button type="button" class="btn btn-primary" id="btn-add-center" disabled>Add Centre</button>
+                    </div>
+                </div>
+
+                <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--color-secondary); margin-bottom: 0.5rem;">
+                    Added Centres:</h4>
+                <div id="centers-list" class="list-container">
+                    <div
+                        style="text-align: center; color: var(--color-secondary); padding: 1.5rem; border: 1px dashed var(--card-border); border-radius: var(--radius-md); font-size: 0.9rem;">
+                        No authorized centers added yet. Use the map to select points and register them.
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <button type="button" class="btn btn-primary" id="btn-save-product"
+                        style="width: 100%; font-size: 1.05rem; padding: 1rem;">
+                        💾 Save Product & Generate QR Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: Leaflet Map & QR Code Return -->
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+
+                <!-- Map Card -->
+                <div class="card" style="padding: 1.5rem;">
+                    <h3
+                        style="margin-bottom: 1rem; color: var(--color-primary); font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Interactive Map Selection</span>
+                        <span id="map-selection-badge" class="badge"
+                            style="background-color: var(--bg-tertiary); color: var(--color-secondary); text-transform:none;">No
+                            point selected</span>
+                    </h3>
+
+                    <!-- Geocoding City Search -->
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <div class="input-with-button">
+                            <input type="text" id="search-input" placeholder="Search City, Town or Area...">
+                            <button type="button" class="btn btn-secondary" id="btn-search">Search</button>
+                        </div>
+                        <div id="search-results"
+                            style="display:none; background-color: var(--bg-tertiary); border:1px solid var(--card-border); border-top:none; border-radius: 0 0 var(--radius-md) var(--radius-md); max-height:150px; overflow-y:auto; position:absolute; z-index:100; width: calc(100% - 3rem);">
+                        </div>
+                    </div>
+
+                    <div id="product-map" class="map-container"></div>
+
+                    <div style="font-size: 0.82rem; color: var(--color-secondary);">
+                        💡 <strong>How to select:</strong> Search for a location or pan/zoom the map, then click on the
+                        map. A dialog will confirm. Once confirmed, you can assign it as the manufacturer's location or
+                        add it as an authorized center.
+                    </div>
+                </div>
+
+                <!-- Result / QR Card -->
+                <div class="card" id="qr-result-card"
+                    style="display: none; padding: 1.5rem; border-color: var(--accent);">
+                    <h3 style="margin-bottom: 1rem; color: var(--accent); font-size: 1.15rem;">✓ Product Registered
+                        Successfully!</h3>
+                    <div class="qr-preview-container">
+                        <img id="qr-code-img" class="qr-image" src="" alt="Product QR Code">
+                        <span id="qr-verify-url"
+                            style="word-break: break-all; font-size: 0.8rem; color: var(--color-secondary); margin-bottom: 1rem; display: block;"></span>
+                        <a href="" id="btn-download-qr" class="btn btn-primary" download style="width: 100%;">
+                            📥 Download QR Code Image
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Confirmation Dialog Modal -->
+    <div id="confirm-modal" class="modal-backdrop" style="display: none;">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 0.75rem;">Confirm Location</h3>
+            <p style="color: var(--color-secondary); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;"
+                id="confirm-modal-text">
+                Do you want to use this location?
+            </p>
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                <button type="button" class="btn btn-secondary" id="confirm-modal-cancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirm-modal-ok">Use Coordinates</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="js/utils.js"></script>
+    <script src="js/add-product.js"></script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+</body>
+
+</html>

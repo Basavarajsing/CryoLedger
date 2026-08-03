@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoLedger - Verify Product</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Leaflet CSS for Map Picker -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="/icons/icon.svg">
+</head>
+
+<body>
+
+    <div class="container" style="max-width: 800px;">
+        <div style="margin-bottom: 2rem;">
+            <a href="index.html"
+                style="color: var(--color-secondary); text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.25rem;">
+                &larr; Back to Dashboard
+            </a>
+            <h2 style="font-size: 2rem; font-weight: 700; margin-top: 0.5rem;">Authenticate Product</h2>
+            <p style="color: var(--color-secondary);">Verify if your product is genuine and checked in at an authorized
+                location.</p>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Main Verification Card -->
+        <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
+            <div class="form-group">
+                <label for="verify-prod-id">Product ID / Serial Number *</label>
+                <div class="input-with-button">
+                    <input type="text" id="verify-prod-id" placeholder="Enter Product ID or scan QR code...">
+                </div>
+            </div>
+
+            <div
+                style="margin-bottom: 1.5rem; padding: 1.25rem; background-color: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--card-border);">
+                <h4 style="margin-bottom: 0.75rem; color: var(--color-primary); font-size: 0.95rem;">Geographical
+                    Position Verification</h4>
+
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <button type="button" class="btn btn-secondary" id="btn-use-gps" style="flex: 1; min-width: 180px;">
+                        📡 Use Current GPS Location
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="btn-toggle-map"
+                        style="flex: 1; min-width: 180px;">
+                        🗺️ Pick Location on Map
+                    </button>
+                </div>
+
+                <!-- Hidden Leaflet Map Picker -->
+                <div id="picker-map-wrapper" style="display: none; margin-bottom: 1rem;">
+                    <!-- Geocoding City Search -->
+                    <div class="form-group" style="margin-bottom: 1rem; position: relative;">
+                        <label for="search-input">Search Location</label>
+                        <div class="input-with-button">
+                            <input type="text" id="search-input" placeholder="Search City, Town or Area...">
+                            <button type="button" class="btn btn-secondary" id="btn-search">Search</button>
+                        </div>
+                        <div id="search-results"
+                            style="display:none; background-color: var(--bg-tertiary); border:1px solid var(--card-border); border-top:none; border-radius: 0 0 var(--radius-md) var(--radius-md); max-height:150px; overflow-y:auto; position:absolute; z-index:100; width: 100%;">
+                        </div>
+                    </div>
+
+                    <div id="picker-map" class="map-container" style="height: 250px;"></div>
+                    <div
+                        style="font-size: 0.8rem; color: var(--color-secondary); text-align: center; margin-top: 0.25rem;">
+                        Click on map to select verification coordinates.
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-bottom: 0.75rem; gap: 0.75rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Latitude</label>
+                        <input type="text" id="verify-lat" placeholder="Required" readonly>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Longitude</label>
+                        <input type="text" id="verify-lng" placeholder="Required" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="verify-addr">Resolved Address / Landmark *</label>
+                    <textarea id="verify-addr" rows="2"
+                        placeholder="Address metadata will appear here, or you can manually enter address details if GPS fails..."></textarea>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" id="btn-verify-product"
+                style="width: 100%; font-size: 1.05rem; padding: 1rem;">
+                🔐 Authenticate Product & Coordinates
+            </button>
+        </div>
+
+        <!-- Verification Result Cards -->
+
+        <!-- 1. Unauthorized Warning / Request Panel -->
+        <div id="panel-unauthorized" class="card"
+            style="display: none; border-color: var(--error); padding: 2rem; margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <span style="font-size: 2rem;">⚠️</span>
+                <div>
+                    <h3 style="color: var(--error); font-size: 1.25rem; font-weight: 700;">UNAUTHORIZED DISTRIBUTION
+                        LOCATION</h3>
+                    <span class="badge badge-unauthorized">Protected</span>
+                </div>
+            </div>
+            <p style="color: var(--color-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                This product is listed in the system, but the check-in is initiated outside any authorized service
+                center or retail hub. Full specifications and genuine verification records are locked.
+            </p>
+
+            <div id="request-approval-form"
+                style="padding: 1.25rem; background-color: rgba(239, 68, 68, 0.05); border-radius: var(--radius-md); border: 1px solid rgba(239, 68, 68, 0.2);">
+                <h4 style="margin-bottom: 0.5rem; color: var(--color-primary); font-size: 0.95rem;">Request Bypass
+                    Permission</h4>
+                <p style="font-size: 0.85rem; color: var(--color-secondary); margin-bottom: 1rem;">
+                    If you are an official inspector or currently demonstrating transit, submit an administrative
+                    approval request so the manufacturer can verify your location.
+                </p>
+                <button type="button" class="btn btn-danger" id="btn-request-access" style="width:100%;">
+                    🛡️ Request Administrative Bypass Approval
+                </button>
+            </div>
+
+            <!-- Pending Bypass Status -->
+            <div id="panel-pending-status"
+                style="display: none; padding: 1.25rem; background-color: var(--warning-light); border-radius: var(--radius-md); border: 1px solid rgba(245,158,11,0.2); text-align: center;">
+                <span class="badge badge-pending" style="margin-bottom: 0.5rem;">Bypass Pending</span>
+                <p style="font-size: 0.9rem; color: var(--color-secondary);">
+                    Your bypass request for this location has been submitted. Contact manufacturer or open the Admin
+                    Panel to approve it, then click "Authenticate" again.
+                </p>
+            </div>
+
+            <!-- Rejected Bypass Status -->
+            <div id="panel-rejected-status"
+                style="display: none; padding: 1.25rem; background-color: rgba(239,68,68,0.1); border-radius: var(--radius-md); border: 1px solid rgba(239,68,68,0.3); text-align: center;">
+                <span class="badge badge-rejected" style="margin-bottom: 0.5rem;">Request Rejected</span>
+                <p style="font-size: 0.9rem; color: var(--error);">
+                    Your bypass request has been rejected by the manufacturer. Verification denied.
+                </p>
+            </div>
+        </div>
+
+        <!-- 1.1 RECALL WARNING PANEL -->
+        <div id="panel-recalled" class="card"
+            style="display: none; border-color: var(--error); padding: 2.25rem; margin-bottom: 2rem; background: rgba(239, 68, 68, 0.05);">
+            <div
+                style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(239,68,68,0.2); padding-bottom: 1rem;">
+                <span style="font-size: 2.5rem; animation: pulse 2s infinite;">🛑</span>
+                <div>
+                    <h3
+                        style="color: var(--error); font-size: 1.45rem; font-weight: 800; letter-spacing: -0.025em; text-transform: uppercase;">
+                        PRODUCT RECALLED BY MANUFACTURER</h3>
+                    <span class="badge badge-rejected" style="font-size:0.75rem;">SAFETY ALERT</span>
+                </div>
+            </div>
+
+            <div
+                style="background-color: rgba(239,68,68,0.1); border: 1px solid var(--error); border-radius: var(--radius-sm); padding: 1.25rem; margin-bottom: 1.5rem; color: #ff8a8a;">
+                <div style="margin-bottom: 0.5rem; font-size: 1.05rem;"><strong>Reason:</strong> <span
+                        id="recall-reason-text">N/A</span></div>
+                <div class="grid-2" style="gap: 1rem; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    <div><strong>Severity Level:</strong> <span id="recall-severity-text"
+                            style="font-weight:700; text-transform:uppercase;">Medium</span></div>
+                    <div><strong>Refund Availability:</strong> <span id="recall-refund-text">Yes</span></div>
+                </div>
+                <div style="font-size: 0.9rem; margin-top: 0.5rem;"><strong>Nearest Return Location Hub:</strong> <span
+                        id="recall-centre-text">-</span></div>
+            </div>
+
+            <div style="font-size: 0.95rem; line-height: 1.6; color: var(--color-secondary);">
+                <strong>Safety instructions:</strong>
+                <p id="recall-instructions-text"
+                    style="background: rgba(0,0,0,0.15); padding: 0.75rem; border-radius: var(--radius-sm); font-size: 0.9rem; color: var(--color-primary); margin-top: 0.25rem;">
+                </p>
+            </div>
+
+            <!-- RETURN PRODUCT FORM -->
+            <div id="recall-return-form"
+                style="margin-top: 1.5rem; border-top: 1px dashed rgba(239,68,68,0.3); padding-top: 1.5rem;">
+                <h4 style="color: var(--color-primary); margin-bottom: 0.5rem; font-size: 0.95rem;">↩️ Return Product
+                    for Recall</h4>
+                <p style="font-size: 0.85rem; color: var(--color-secondary); margin-bottom: 1rem;">
+                    If you wish to return this recalled product, please enter your password to authorize this action:
+                </p>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+                    <input type="password" id="recall-return-password" placeholder="Enter your account password"
+                        style="flex-grow: 1; padding: 0.5rem; font-size: 0.85rem; border-radius: var(--radius-sm); background: var(--bg-tertiary); border: 1px solid var(--card-border); color: white;" />
+                    <button type="button" class="btn btn-danger" id="btn-submit-recall-return"
+                        style="padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: bold;">
+                        Confirm Return
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Authorized / Approved Success Details Panel -->
+        <div id="panel-authorized" class="card"
+            style="display: none; border-color: var(--accent); padding: 2rem; margin-bottom: 2rem;">
+            <div
+                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); padding-bottom: 1.25rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="font-size: 2.25rem;">🛡️</span>
+                    <div>
+                        <h3 id="panel-auth-title" style="color: var(--accent); font-size: 1.35rem; font-weight: 700;">
+                            PRODUCT GENUINE & AUTHORIZED</h3>
+                        <div style="margin-top: 0.25rem;">
+                            <span id="badge-auth-status" class="badge badge-authorized">VERIFIED DETAILS</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 0.8rem; color: var(--color-secondary); display: block;">Total Scans</span>
+                    <strong id="detail-scans" style="font-size: 1.5rem; color: var(--accent);">-</strong>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 1.5rem;">
+                <div>
+                    <span style="font-size: 0.85rem; color: var(--color-secondary); display: block;">Product Name</span>
+                    <span id="detail-name"
+                        style="font-size: 1.05rem; font-weight: 600; color: var(--color-primary);">-</span>
+                </div>
+                <div>
+                    <span style="font-size: 0.85rem; color: var(--color-secondary); display: block;">Product ID /
+                        Serial</span>
+                    <span id="detail-id"
+                        style="font-size: 1.05rem; font-weight: 600; color: var(--color-primary); font-family: monospace;">-</span>
+                </div>
+            </div>
+
+            <div class="grid-2"
+                style="margin-bottom: 1.5rem; border-top: 1px solid var(--card-border); padding-top: 1.25rem;">
+                <div>
+                    <span style="font-size: 0.85rem; color: var(--color-secondary); display: block;">Manufacturer</span>
+                    <span id="detail-mfg"
+                        style="font-size: 1.05rem; font-weight: 600; color: var(--color-primary);">-</span>
+                </div>
+                <div>
+                    <span style="font-size: 0.85rem; color: var(--color-secondary); display: block;">Manufacturer HQ
+                        Location</span>
+                    <span id="detail-mfg-addr" style="font-size: 0.9rem; color: var(--color-secondary);">-</span>
+                </div>
+            </div>
+
+            <!-- Verification Match Center info -->
+            <div id="panel-matched-center"
+                style="display: none; margin-bottom: 1.5rem; background-color: var(--accent-light); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-md); padding: 1rem 1.25rem;">
+                <span style="font-size: 0.82rem; color: #34d399; font-weight: 600; text-transform: uppercase;">Matched
+                    Retail / Service Centre:</span>
+                <div id="detail-matched-center-name"
+                    style="font-weight: 700; font-size: 1rem; color: var(--color-primary); margin-top: 0.15rem;">-</div>
+            </div>
+
+            <div id="panel-matched-bypass"
+                style="display: none; margin-bottom: 1.5rem; background-color: var(--info-light); border: 1px solid rgba(59,130,246,0.3); border-radius: var(--radius-md); padding: 1rem 1.25rem;">
+                <span style="font-size: 0.82rem; color: #60a5fa; font-weight: 600; text-transform: uppercase;">Bypass
+                    Verification:</span>
+                <div style="font-weight: 700; font-size: 1rem; color: var(--color-primary); margin-top: 0.15rem;">Admin
+                    Route Allowed</div>
+            </div>
+
+            <div style="border-top: 1px solid var(--card-border); padding-top: 1.5rem;">
+                <h4 style="margin-bottom: 0.75rem; color: var(--color-primary); font-size: 0.95rem;">Authorized Service
+                    Locations:</h4>
+                <div id="detail-centers" class="list-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. UNIFIED DOSSIER PANEL (Passport, Warranty, Health, Supply Chain) -->
+        <div id="panel-dossier" style="display: none;">
+            <h3
+                style="font-size: 1.25rem; font-weight: 700; color: var(--color-primary); margin-bottom: 1rem; border-left: 3px solid var(--color-secondary); padding-left: 0.5rem;">
+                Verification Dossier Report</h3>
+
+            <!-- Real-time Custody Stepper Tracker -->
+            <div class="card stepper-container" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+                <h4
+                    style="color: var(--color-primary); font-size: 1.1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📊 Custody Transit Progress</span>
+                </h4>
+                <div class="stepper" id="custody-stepper"
+                    style="display: flex; justify-content: space-between; position: relative; margin-top: 1.5rem; margin-bottom: 1.5rem;">
+                    <!-- Line background -->
+                    <div class="stepper-line"
+                        style="position: absolute; top: 15px; left: 5%; right: 5%; height: 4px; background: var(--bg-tertiary); z-index: 1;">
+                    </div>
+                    <div class="stepper-progress" id="stepper-progress-bar"
+                        style="position: absolute; top: 15px; left: 5%; width: 0%; height: 4px; background: var(--accent); z-index: 2; transition: width 0.4s ease;">
+                    </div>
+
+                    <!-- Steps -->
+                    <div class="step" data-step="1"
+                        style="display: flex; flex-direction: column; align-items: center; z-index: 3; flex: 1; text-align: center;">
+                        <div class="step-bulb"
+                            style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-secondary); transition: all 0.3s ease;">
+                            1</div>
+                        <div class="step-label"
+                            style="font-size: 0.75rem; font-weight: 600; color: var(--color-secondary); margin-top: 0.5rem;">
+                            Registered</div>
+                    </div>
+                    <div class="step" data-step="2"
+                        style="display: flex; flex-direction: column; align-items: center; z-index: 3; flex: 1; text-align: center;">
+                        <div class="step-bulb"
+                            style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-secondary); transition: all 0.3s ease;">
+                            2</div>
+                        <div class="step-label"
+                            style="font-size: 0.75rem; font-weight: 600; color: var(--color-secondary); margin-top: 0.5rem;">
+                            In Transit (Depot)</div>
+                    </div>
+                    <div class="step" data-step="3"
+                        style="display: flex; flex-direction: column; align-items: center; z-index: 3; flex: 1; text-align: center;">
+                        <div class="step-bulb"
+                            style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-secondary); transition: all 0.3s ease;">
+                            3</div>
+                        <div class="step-label"
+                            style="font-size: 0.75rem; font-weight: 600; color: var(--color-secondary); margin-top: 0.5rem;">
+                            Depot Dispatched</div>
+                    </div>
+                    <div class="step" data-step="4"
+                        style="display: flex; flex-direction: column; align-items: center; z-index: 3; flex: 1; text-align: center;">
+                        <div class="step-bulb"
+                            style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-secondary); transition: all 0.3s ease;">
+                            4</div>
+                        <div class="step-label"
+                            style="font-size: 0.75rem; font-weight: 600; color: var(--color-secondary); margin-top: 0.5rem;">
+                            Store Handed Over</div>
+                    </div>
+                    <div class="step" data-step="5"
+                        style="display: flex; flex-direction: column; align-items: center; z-index: 3; flex: 1; text-align: center;">
+                        <div class="step-bulb"
+                            style="width: 32px; height: 32px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--color-secondary); transition: all 0.3s ease;">
+                            5</div>
+                        <div class="step-label"
+                            style="font-size: 0.75rem; font-weight: 600; color: var(--color-secondary); margin-top: 0.5rem;">
+                            Secure Custody Verified</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2" style="gap: 1.5rem; margin-bottom: 3rem;">
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+                    <!-- Digital Passport -->
+                    <div class="card" style="padding: 1.5rem;">
+                        <h4
+                            style="color: var(--color-primary); font-size: 1.1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem; display: flex; gap: 0.5rem; align-items:center;">
+                            <span>📦 Digital passport</span>
+                        </h4>
+                        <div id="dossier-image-box"
+                            style="display: none; background: rgba(0,0,0,0.25); text-align: center; padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+                            <img id="dossier-product-img" src="" alt="Product Image"
+                                style="max-height: 150px; border-radius: var(--radius-sm); border:1px solid var(--card-border);">
+                        </div>
+                        <div class="profile-details-grid"
+                            style="display: grid; grid-template-columns: 125px 1fr; gap: 0.5rem; font-size: 0.92rem;">
+                            <div><strong>Brand:</strong></div>
+                            <div id="dossier-brand">-</div>
+                            <div><strong>Category:</strong></div>
+                            <div id="dossier-category">-</div>
+                            <div><strong>Model:</strong></div>
+                            <div id="dossier-model">-</div>
+                            <div><strong>Batch Number:</strong></div>
+                            <div id="dossier-batch">-</div>
+                            <div><strong>Expiry Date:</strong></div>
+                            <div id="dossier-expiry">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Smart Warranty Status -->
+                    <div class="card" style="padding: 1.5rem;">
+                        <h4
+                            style="color: var(--color-primary); font-size: 1.1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem;">
+                            🛡️ Smart Warranty Status
+                        </h4>
+                        <div id="dossier-warranty-badge-box" style="margin-bottom: 0.75rem;"></div>
+                        <div class="profile-details-grid"
+                            style="display: grid; grid-template-columns: 125px 1fr; gap: 0.5rem; font-size: 0.92rem;">
+                            <div><strong>Type:</strong></div>
+                            <div id="dossier-warranty-type">-</div>
+                            <div><strong>Warranty Period:</strong></div>
+                            <div id="dossier-warranty-period">-</div>
+                            <div><strong>Activation Date:</strong></div>
+                            <div id="dossier-warranty-start">-</div>
+                            <div><strong>Expiration Date:</strong></div>
+                            <div id="dossier-warranty-end">-</div>
+                            <div><strong>Days Remaining:</strong></div>
+                            <div id="dossier-warranty-days">-</div>
+                            <div style="grid-column: span 2; margin-top: 0.5rem;">
+                                <strong>Terms & Coverage:</strong>
+                                <div id="dossier-warranty-terms"
+                                    style="background: rgba(0,0,0,0.155); padding: 0.6rem; border-radius: var(--radius-sm); font-size: 0.82rem; height: 50px; overflow-y: auto; color: var(--color-secondary); margin-top: 0.25rem;">
+                                    -</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+                    <!-- Health and Risk calculation -->
+                    <div class="card" style="padding: 1.5rem;">
+                        <h4
+                            style="color: var(--color-primary); font-size: 1.1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem;">
+                            🏥 Health & Trust Audit
+                        </h4>
+                        <div class="profile-details-grid"
+                            style="display: grid; grid-template-columns: 125px 1fr; gap: 0.5rem; font-size: 0.92rem;">
+                            <div><strong>Overall Health:</strong></div>
+                            <div id="dossier-health-score" style="font-weight:700;">-</div>
+                            <div><strong>Trust Score:</strong></div>
+                            <div id="dossier-trust-level" style="font-weight:700;">-</div>
+                            <div><strong>Risk Level:</strong></div>
+                            <div id="dossier-risk-level" style="font-weight:700;">-</div>
+                            <div><strong>Scans log:</strong></div>
+                            <div id="dossier-attempts">-</div>
+                            <div><strong>Verdict / Actions:</strong></div>
+                            <div id="dossier-recommendation" style="color: var(--color-secondary); font-style:italic;">-
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Star Rating Feedback Widget -->
+                    <div class="card feedback-card" id="feedback-widget-card"
+                        style="padding: 1.5rem; background: rgba(19, 28, 49, 0.45); border: 1px solid var(--card-border); border-radius: var(--radius-md); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                        <h4
+                            style="color: var(--color-primary); font-size: 1.1rem; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem;">
+                            ⭐️ Rate Product Health & Quality
+                        </h4>
+                        <p
+                            style="font-size: 0.8rem; color: var(--color-secondary); margin-bottom: 1rem; line-height: 1.4;">
+                            Provide transparent condition assessment rating to update this item's audit profile.
+                        </p>
+                        <div class="star-rating" id="dossier-star-rating"
+                            style="display: flex; gap: 0.5rem; font-size: 2rem; color: var(--color-secondary); cursor: pointer; margin-bottom: 1rem; justify-content: center; user-select: none;">
+                            <span class="star" data-value="1" style="transition: color 0.2s ease;">★</span>
+                            <span class="star" data-value="2" style="transition: color 0.2s ease;">★</span>
+                            <span class="star" data-value="3" style="transition: color 0.2s ease;">★</span>
+                            <span class="star" data-value="4" style="transition: color 0.2s ease;">★</span>
+                            <span class="star" data-value="5" style="transition: color 0.2s ease;">★</span>
+                        </div>
+                        <button id="btn-submit-feedback" class="btn btn-secondary"
+                            style="padding: 0.4rem 1rem; font-size: 0.85rem; width: 100%; font-weight: bold;">
+                            Submit Feedback
+                        </button>
+                        <div id="feedback-result-msg"
+                            style="display: none; font-size: 0.82rem; color: var(--accent); font-weight: 600; text-align: center; margin-top: 0.82rem;">
+                        </div>
+                    </div>
+
+                    <!-- Supply Chain Tracking Timeline -->
+                    <div class="card" style="padding: 1.5rem;">
+                        <h4
+                            style="color: var(--color-primary); font-size: 1.1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem;">
+                            ⛓️ Supply Chain Timeline Link
+                        </h4>
+                        <div id="dossier-journey-timeline"
+                            style="max-height: 250px; overflow-y: auto; padding-right: 0.25rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="js/utils.js"></script>
+    <script src="js/verify.js?v=2"></script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+</body>
+
+</html>

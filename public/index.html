@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryoLedger - Secure Product Authentication System</title>
+  <link rel="stylesheet" href="styles.css?v=1.2">
+  <style>
+    /* Inline additions specific to landing layout to ensure clean container spacing */
+    .hero-btn {
+      min-width: 160px;
+    }
+  </style>
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="/icons/icon.svg">
+</head>
+
+<body>
+
+  <!-- Header is generated dynamically by utils.js -->
+
+  <!-- Fixed Background Video (spans entire page bottom) -->
+  <div class="hero-video-container">
+    <div class="hero-video-fallback"></div>
+    <video class="hero-video" autoplay loop muted playsinline preload="metadata" id="bg-video">
+      <source src="assets/cryoledger.mp4?v=1.2" type="video/mp4">
+      <!-- Fallback if browser does not support HTML5 video -->
+    </video>
+  </div>
+  <div class="hero-overlay"></div>
+
+  <!-- Clean Intro Section (just video, no text overlay on load) -->
+  <div class="intro-viewport">
+    <div class="scroll-indicator"
+      onclick="document.getElementById('explore-hero').scrollIntoView({ behavior: 'smooth' })">
+      <span>Explore CryoLedger</span>
+      <div class="scroll-arrow">&darr;</div>
+    </div>
+  </div>
+
+  <!-- Scrollable Hero Text Section -->
+  <div class="landing-hero" id="explore-hero">
+
+    <div class="container" style="max-width: 800px; z-index: 10; position: relative;">
+      <span class="hero-tagline">⚡ Supply Chain Integrity</span>
+      <h1
+        style="font-size: 3.5rem; font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem; letter-spacing: -0.025em;">
+        Verify Products.<br>Protect Trust.
+      </h1>
+      <p
+        style="font-size: 1.2rem; color: var(--color-secondary); max-width: 600px; margin: 0 auto 2.5rem auto; line-height: 1.6;">
+        QR-powered product authentication and authorized-location verification for modern supply networks. Enforced with
+        cryptographic JWT handshakes and precise GPS geofencing.
+      </p>
+
+      <div class="hero-buttons" style="margin-bottom: 1.5rem;">
+        <a href="verify.html" class="btn btn-primary hero-btn"
+          style="padding: 0.9rem 1.75rem; font-weight: 600; border-radius: var(--radius-md);">
+          🔍 Verify page
+        </a>
+        <a href="admin-login.html" class="btn btn-secondary hero-btn"
+          style="padding: 0.9rem 1.75rem; font-weight: 600; border-radius: var(--radius-md); border-color: var(--info); color: var(--info);">
+          🛡️ Manufacturer Portal
+        </a>
+      </div>
+
+      <!-- Quick Verification Search Box -->
+      <div
+        style="margin-top: 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem; max-width: 500px; margin-left: auto; margin-right: auto; background: rgba(255,255,255,0.05); padding: 0.4rem 0.8rem; border-radius: var(--radius-md); border: 1px solid var(--card-border); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);">
+        <input type="text" id="quick-verify-id" placeholder="Enter Product Serial / UID..."
+          style="flex: 1; background: transparent; border: none; outline: none; color: var(--color-primary); font-size: 0.95rem; font-family: monospace; padding: 0.5rem;">
+        <button id="btn-quick-verify" class="btn btn-primary"
+          style="padding: 0.5rem 1.2rem; font-size: 0.85rem; border-radius: var(--radius-sm); font-weight: bold; background: var(--accent); color: var(--bg-primary); border: none; cursor: pointer; transition: transform 0.2s ease;">
+          ⚡ Authenticate
+        </button>
+      </div>
+
+      <div style="margin-top: 2rem; font-size: 0.9rem; color: var(--color-secondary);">
+        Need access?
+        <a href="login.html" style="color: var(--accent); text-decoration: underline; margin-left: 0.25rem;">Customer
+          Login/Register</a>
+        <span style="opacity: 0.3; margin: 0 0.5rem;">|</span>
+        <a href="admin-login.html" style="color: var(--info); text-decoration: underline;">Admin Registration</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Capabilities Section -->
+  <section class="landing-section" id="capabilities">
+    <div class="container">
+      <h2 class="landing-section-title">Trusted Capabilities</h2>
+      <div class="capability-grid">
+        <div class="glass-card">
+          <div style="font-size: 2.5rem; margin-bottom: 1.25rem;">🔐</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--color-primary);">QR
+            Authentication</h3>
+          <p style="color: var(--color-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0;">
+            Serialized QR codes generated directly upon registry. Instantly matches cryptographically signed product
+            identities against database records.
+          </p>
+        </div>
+        <div class="glass-card">
+          <div style="font-size: 2.5rem; margin-bottom: 1.25rem;">📡</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--color-primary);">GPS
+            Location verification</h3>
+          <p style="color: var(--color-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0;">
+            Validates checks using Leaflet.js interactive maps and smartphone GPS geolocation compared against
+            authorized coordinates.
+          </p>
+        </div>
+        <div class="glass-card">
+          <div style="font-size: 2.5rem; margin-bottom: 1.25rem;">🏢</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--color-primary);">Center
+            Management</h3>
+          <p style="color: var(--color-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0;">
+            Define specific coordinates radius for warehouses, retail hubs, or distributors. Stops unauthorized
+            gray-market distributions.
+          </p>
+        </div>
+        <div class="glass-card">
+          <div style="font-size: 2.5rem; margin-bottom: 1.25rem;">🛡️</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--color-primary);">Admin
+            Bypass Approvals</h3>
+          <p style="color: var(--color-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0;">
+            Enables supply chain inspectors at new coordinates to submit temporary bypass requests reviewed and approved
+            by administrators.
+          </p>
+        </div>
+        <div class="glass-card">
+          <div style="font-size: 2.5rem; margin-bottom: 1.25rem;">📜</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--color-primary);">Audit
+            History Log</h3>
+          <p style="color: var(--color-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 0;">
+            Every single location check-in is logged with its IP address, timestamp, exact coordinates status, and
+            center identity.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="landing-section"
+    style="background: rgba(19, 28, 49, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+    <div class="container" style="max-width: 900px;">
+      <h2 class="landing-section-title">How It Works</h2>
+      <div class="workflow-steps">
+        <div class="workflow-step">
+          <div class="workflow-step-num">1</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--color-primary);">Batch Registration</h3>
+          <p style="font-size: 0.85rem; color: var(--color-secondary); line-height: 1.5;">
+            Manufacturer registers the serial details and assigns allowed service centers.
+          </p>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-step-num">2</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--color-primary);">QR Labeling</h3>
+          <p style="font-size: 0.85rem; color: var(--color-secondary); line-height: 1.5;">
+            Generate unique QR codes printed onto the package, encoding details and serial tags.
+          </p>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-step-num">3</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--color-primary);">Point Verification</h3>
+          <p style="font-size: 0.85rem; color: var(--color-secondary); line-height: 1.5;">
+            Inspectors scan the code at the warehouse. The system queries geolocation data.
+          </p>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-step-num">4</div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--color-primary);">Authentication</h3>
+          <p style="font-size: 0.85rem; color: var(--color-secondary); line-height: 1.5;">
+            Matches location radius. Unlisted sites request admin overrides before details unlock.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Industry Use Cases Section -->
+  <section class="landing-section">
+    <div class="container">
+      <h2 class="landing-section-title">Industry Applications</h2>
+      <div class="grid-3">
+        <div class="card usecase-card">
+          <div class="usecase-icon">📸</div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-primary);">High-Value Electronics
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--color-secondary); line-height: 1.5; margin-bottom: 0;">
+              Ensure high-end computer chips and components are only distributed through certified dealers.
+            </p>
+          </div>
+        </div>
+        <div class="card usecase-card">
+          <div class="usecase-icon">⚙️</div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-primary);">Automotive Parts</h3>
+            <p style="font-size: 0.85rem; color: var(--color-secondary); line-height: 1.5; margin-bottom: 0;">
+              Block counterfeit brake pads and engines from mixed distributor sites.
+            </p>
+          </div>
+        </div>
+        <div class="card usecase-card">
+          <div class="usecase-icon">🧬</div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-primary);">Medical Equipment</h3>
+            <p style="font-size: 0.85rem; color: var(--color-secondary); line-height: 1.5; margin-bottom: 0;">
+              Verify vaccine distribution boxes checking inside cold-chain warehouses only.
+            </p>
+          </div>
+        </div>
+        <div class="card usecase-card">
+          <div class="usecase-icon">🏷️</div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-primary);">Luxury Goods</h3>
+            <p style="font-size: 0.85rem; color: var(--color-secondary); line-height: 1.5; margin-bottom: 0;">
+              Validate designer watches and tags directly inside licensed boutique coordinates.
+            </p>
+          </div>
+        </div>
+        <div class="card usecase-card">
+          <div class="usecase-icon">🔥</div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-primary);">Industrial Components
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--color-secondary); line-height: 1.5; margin-bottom: 0;">
+              Keep heavy machinery pipelines authentic, tracking each transit stop with details.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security / Value Proposition Section -->
+  <section class="landing-section"
+    style="background: rgba(19, 28, 49, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); text-align: center;">
+    <div class="container" style="max-width: 750px;">
+      <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--color-primary);">Zero-Trust
+        Supply Validation</h2>
+      <p style="font-size: 1rem; color: var(--color-secondary); line-height: 1.7; margin-bottom: 2rem;">
+        CryoLedger provides end-to-end assurance through dynamic JWT session tokens, strict role separation (Admins
+        manage supply registry; Customers verify locations), and cryptographic data models. No spoofed check-ins, no
+        unauthorized distribution paths, and absolute clarity at wholesale levels.
+      </p>
+      <div style="display:inline-flex; gap:3rem; justify-content:center; flex-wrap:wrap;">
+        <div>
+          <span id="stat-registered"
+            style="font-size:2.5rem; font-weight:800; color:var(--accent); display:block;">-</span>
+          <span style="font-size:0.85rem; color:var(--color-secondary)">Products Registered</span>
+        </div>
+        <div style="border-right: 1px solid var(--card-border);"></div>
+        <div>
+          <span id="stat-protected"
+            style="font-size:2.5rem; font-weight:800; color:var(--info); display:block;">-</span>
+          <span style="font-size:0.85rem; color:var(--color-secondary)">Warranty Protected</span>
+        </div>
+        <div style="border-right: 1px solid var(--card-border);"></div>
+        <div>
+          <span id="stat-verified"
+            style="font-size:2.5rem; font-weight:800; color:var(--accent); display:block;">-</span>
+          <span style="font-size:0.85rem; color:var(--color-secondary)">Secure Verifications</span>
+        </div>
+        <div style="border-right: 1px solid var(--card-border);"></div>
+        <div>
+          <span id="stat-intercepts"
+            style="font-size:2.5rem; font-weight:800; color:var(--warning); display:block;">-</span>
+          <span style="font-size:0.85rem; color:var(--color-secondary)">Blocked Alert Leaks</span>
+        </div>
+      </div>
+
+      <!-- Live Protection Feed Widget -->
+      <div class="card"
+        style="margin-top: 3.5rem; text-align: left; padding: 1.5rem 2rem; max-width: 600px; margin-left: auto; margin-right: auto; background: rgba(19, 28, 49, 0.6); border: 1px solid var(--card-border); border-radius: var(--radius-md); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+        <h4
+          style="font-size: 1.05rem; color: var(--color-primary); margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--card-border); padding-bottom: 0.5rem;">
+          <span
+            style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; box-shadow: 0 0 8px var(--accent); margin-right: 0.25rem;"></span>
+          <span>Live Security Network Telemetry</span>
+        </h4>
+        <div id="telemetry-ticker-box"
+          style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.85rem; max-height: 180px; overflow-y: auto;">
+          <div style="color: var(--color-secondary); text-align: center; padding: 1rem;">Resolving network telemetry...
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Globally Active Terminals Ticker Section -->
+  <section class="landing-section" id="network-map"
+    style="background: rgba(19, 28, 49, 0.25); border-top: 1px solid var(--card-border); padding: 4rem 0;">
+    <div class="container" style="max-width: 1200px; overflow: hidden;">
+      <h2 class="landing-section-title">Network Nodes & Global Handover Points</h2>
+      <p
+        style="text-align: center; color: var(--color-secondary); max-width: 600px; margin: 0 auto 2rem auto; font-size: 0.95rem;">
+        Real-time telemetry showing live nodes, registration authorities, distribution depots, retail outlets, and
+        customer verification scans globally.
+      </p>
+
+      <!-- Horizontal scrolling nodes ticker infinite marquee container -->
+      <div class="ticker-wrapper"
+        style="overflow: hidden; width: 100%; mask-image: linear-gradient(to right, transparent, white 15%, white 85%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, white 15%, white 85%, transparent); padding: 2.5rem 0; position: relative; z-index: 10;">
+        <div class="ticker-track" id="nodes-ticker-track"
+          style="display: flex; gap: 2rem; width: max-content; will-change: transform;">
+          <div style="color: var(--color-secondary); padding: 1.5rem; text-align: center; width: 100%;">Loading network
+            node telemetry...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Accordions Section -->
+  <section class="landing-section" id="faq-section"
+    style="border-top: 1px solid var(--card-border); padding-bottom: 4rem;">
+    <div class="container" style="max-width: 800px;">
+      <h2 class="landing-section-title">Frequently Asked Questions</h2>
+      <p style="text-align: center; color: var(--color-secondary); margin-bottom: 2.5rem; font-size: 0.95rem;">
+        Got questions about custody, coordinates verification, or security? Find fast solutions below.
+      </p>
+
+      <div class="faq-accordion-container" style="display: flex; flex-direction: column; gap: 1rem;">
+
+        <!-- FAQ 1 -->
+        <div class="faq-item glass-card"
+          style="padding: 1.25rem 1.75rem; cursor: pointer; transition: all 0.3s ease; border-radius: var(--radius-md); text-align: left;">
+          <div class="faq-question"
+            style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.05rem; color: var(--color-primary);">
+            <span>How does QR coordinate verification work?</span>
+            <span class="faq-icon"
+              style="transition: transform 0.3s ease; font-size: 1.2rem; color: var(--accent);">&#43;</span>
+          </div>
+          <div class="faq-answer"
+            style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease, margin-top 0.3s ease; color: var(--color-secondary); font-size: 0.9rem; line-height: 1.6;">
+            CryoLedger matches the scanning device's live GPS coordinates (latitude and longitude) with the product's
+            pre-assigned geofence radius. Real-time verification ensures that details unlock only if checked at
+            authorized hubs or retailers.
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item glass-card"
+          style="padding: 1.25rem 1.75rem; cursor: pointer; transition: all 0.3s ease; border-radius: var(--radius-md); text-align: left;">
+          <div class="faq-question"
+            style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.05rem; color: var(--color-primary);">
+            <span>What happens during a product recall warning?</span>
+            <span class="faq-icon"
+              style="transition: transform 0.3s ease; font-size: 1.2rem; color: var(--accent);">&#43;</span>
+          </div>
+          <div class="faq-answer"
+            style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease, margin-top 0.3s ease; color: var(--color-secondary); font-size: 0.9rem; line-height: 1.6;">
+            If an item is actively recalled by the manufacturer/admin, the verification screen is immediately
+            intercepted by a bright warning alert. Authorized locations are blocked from dispatching, and users receive
+            nearest center return instructions.
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item glass-card"
+          style="padding: 1.25rem 1.75rem; cursor: pointer; transition: all 0.3s ease; border-radius: var(--radius-md); text-align: left;">
+          <div class="faq-question"
+            style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.05rem; color: var(--color-primary);">
+            <span>What is the role of the Distributor vs Retailer in custody handover?</span>
+            <span class="faq-icon"
+              style="transition: transform 0.3s ease; font-size: 1.2rem; color: var(--accent);">&#43;</span>
+          </div>
+          <div class="faq-answer"
+            style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease, margin-top 0.3s ease; color: var(--color-secondary); font-size: 0.9rem; line-height: 1.6;">
+            The Distributor acknowledges shipment arrival at the logistics depot and authorizes dispatch to the assigned
+            retailer center. The Retailer confirms receiving physical custody at the shop and performs the final
+            handover/dispatch to the customer.
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item glass-card"
+          style="padding: 1.25rem 1.75rem; cursor: pointer; transition: all 0.3s ease; border-radius: var(--radius-md); text-align: left;">
+          <div class="faq-question"
+            style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.05rem; color: var(--color-primary);">
+            <span>How can a user request a geofence location bypass?</span>
+            <span class="faq-icon"
+              style="transition: transform 0.3s ease; font-size: 1.2rem; color: var(--accent);">&#43;</span>
+          </div>
+          <div class="faq-answer"
+            style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease, margin-top 0.3s ease; color: var(--color-secondary); font-size: 0.9rem; line-height: 1.6;">
+            If the scan occurs in an unauthorized location, detail panels are hidden for safety. The verifier can click
+            'Request Administrative Bypass' coordinates authorization. An Admin can instantly review and approve from
+            their dashboard panel.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Developer / Contact Section (Placeholders) -->
+  <section class="landing-section" id="developer">
+    <div class="container">
+      <h2 class="landing-section-title">Project Developer Contacts</h2>
+      <div class="developer-profile"
+        style="background: rgba(19, 28, 49, 0.6); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 500px; margin: 0 auto; text-align: center; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--card-shadow); transition: var(--transition);">
+        <div class="developer-avatar" style="font-size: 3rem; margin-bottom: 1rem;">💻</div>
+        <h3 style="font-size: 1.5rem; color: var(--color-primary); margin-bottom: 0.5rem; font-weight: 800;">Basavaraj
+          Sing</h3>
+        <p
+          style="font-size: 0.95rem; color: var(--color-secondary); max-width: 360px; line-height: 1.6; margin: 0 auto 1.5rem auto;">
+          Founder & Principal Security Architect. Leading decentralized anti-counterfeiting tracking protocols.
+          Interoperable API integrations and zero-trust engineering.
+        </p>
+        <div style="font-size: 0.85rem; color: var(--color-secondary); margin-bottom: 0.5rem;">
+          📧 Email: <span style="color: var(--color-primary);">basavarajsing2005@gmail.com</span>
+        </div>
+        <div class="developer-links">
+          <a href="https://www.linkedin.com/in/basavarajsing/" class="developer-link" target="_blank">🔗 LinkedIn</a>
+          <a href="https://github.com/Basavarajsing" class="developer-link" target="_blank">🐙 GitHub</a>
+          <a href="https://basavarajsing.vercel.app/" class="developer-link" target="_blank">🐙 Portfolio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ambient Background Rainbow Crackers Canvas -->
+  <canvas id="crackers-canvas"></canvas>
+
+
+
+  <script src="js/utils.js"></script>
+  <script>
+    // Create Header / Footer
+    createHeader();
+    createFooter();
+
+    // Auto routing if logged in
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+    if (token) {
+      if (role === 'admin') {
+        window.location.href = 'admin-dashboard.html';
+      } else if (role === 'user') {
+        window.location.href = 'user-dashboard.html';
+      }
+    }
+
+    // Force video play on first click, scroll or touch if autoplay is blocked
+    const initVideo = () => {
+      const video = document.getElementById('bg-video');
+      if (video) {
+        console.log("Initializing fixed video backdrop...");
+
+        video.addEventListener('error', (e) => {
+          console.error("Video element error:", video.error);
+        });
+        video.addEventListener('loadeddata', () => {
+          console.log("Video source data loaded successfully!");
+        });
+        video.addEventListener('play', () => {
+          console.log("Video playing continuously.");
+        });
+
+        const attemptPlay = () => {
+          video.play().then(() => {
+            // Remove listeners once playing
+            document.removeEventListener('click', attemptPlay);
+            document.removeEventListener('scroll', attemptPlay);
+            document.removeEventListener('touchstart', attemptPlay);
+          }).catch(err => console.log("Force play failure:", err));
+        };
+
+        // Always try to autoplay and loop continuously
+        video.play().then(() => {
+          console.log("Autoplay started successfully.");
+        }).catch(() => {
+          console.log("Autoplay blocked, adding interaction event handlers.");
+          document.addEventListener('click', attemptPlay);
+          document.addEventListener('scroll', attemptPlay);
+          document.addEventListener('touchstart', attemptPlay);
+        });
+      }
+    };
+
+
+
+    // Rainbow Crackers / Skycrackers Animation Loop
+    const initCrackers = () => {
+      const canvas = document.getElementById('crackers-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let rockets = [];
+      let nextRocket = 0;
+
+      const resizeCanvas = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      };
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      class Rocket {
+        constructor(startX, startY, targetX, targetY) {
+          this.x = startX;
+          this.y = startY;
+          this.tx = targetX;
+          this.ty = targetY;
+          this.angle = Math.atan2(targetY - startY, targetX - startX);
+          this.speed = Math.random() * 4 + 7;
+          this.vx = Math.cos(this.angle) * this.speed;
+          this.vy = Math.sin(this.angle) * this.speed;
+          this.radius = 2.0;
+          this.color = `hsl(${Math.random() * 360}, 100%, 75%)`;
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          // Spawn tiny sparks trail
+          if (Math.random() < 0.3) {
+            particles.push(new Particle(this.x, this.y, this.color, true));
+          }
+        }
+
+        hasReached() {
+          return this.vy >= 0 || this.y <= this.ty;
+        }
+
+        draw() {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = this.color;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      class Particle {
+        constructor(x, y, color, isTail = false) {
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          this.isTail = isTail;
+          this.angle = Math.random() * Math.PI * 2;
+          this.speed = isTail ? (Math.random() * 1.5) : (Math.random() * 5 + 2.5);
+          this.radius = isTail ? (Math.random() * 0.8 + 0.4) : (Math.random() * 2.2 + 1.2);
+          this.gravity = isTail ? 0.02 : 0.06;
+          this.alpha = 1;
+          this.decay = isTail ? (Math.random() * 0.05 + 0.02) : (Math.random() * 0.012 + 0.007);
+          this.sparkle = !isTail && Math.random() < 0.35;
+          this.vx = isTail ? (-Math.cos(this.angle) * this.speed) : (Math.cos(this.angle) * this.speed);
+          this.vy = isTail ? (Math.random() * 1) : (Math.sin(this.angle) * this.speed);
+        }
+
+        update() {
+          this.vy += this.gravity;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.alpha -= this.decay;
+          if (this.sparkle) {
+            this.radius = Math.max(0.2, this.radius + (Math.random() - 0.5) * 0.5);
+          }
+        }
+
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, this.alpha * (this.sparkle && Math.random() < 0.2 ? 0.3 : 1));
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = this.isTail ? 3 : 12;
+          ctx.shadowColor = this.color;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      const launchRocket = (startX = null) => {
+        const x = startX !== null ? startX : Math.random() * canvas.width;
+        const targetX = x + (Math.random() - 0.5) * 200;
+        const targetY = canvas.height * 0.15 + Math.random() * (canvas.height * 0.35);
+        rockets.push(new Rocket(x, canvas.height, targetX, targetY));
+      };
+
+      const createCrackerBurst = (x, y) => {
+        // Multi-colored double rings & high-brightness HSL palette
+        const baseHue = Math.random() * 360;
+        const numParticles = 55 + Math.floor(Math.random() * 35);
+        for (let i = 0; i < numParticles; i++) {
+          const particleHue = (baseHue + (Math.random() < 0.5 ? 60 : (Math.random() < 0.2 ? 180 : 0))) % 360;
+          const color = `hsla(${particleHue}, 100%, 70%, 1)`;
+          particles.push(new Particle(x, y, color));
+        }
+      };
+
+      const animate = (time) => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Spawn rockets automatically
+        if (time > nextRocket) {
+          launchRocket();
+          nextRocket = time + Math.random() * 1800 + 700; // Launch every 0.7s to 2.5s
+        }
+
+        // Draw and update rockets
+        rockets = rockets.filter(r => {
+          r.update();
+          r.draw();
+          if (r.hasReached()) {
+            createCrackerBurst(r.x, r.y);
+            return false;
+          }
+          return true;
+        });
+
+        // Update and draw particles
+        particles = particles.filter(p => {
+          p.update();
+          if (p.alpha > 0) {
+            p.draw();
+            return true;
+          }
+          return false;
+        });
+
+        requestAnimationFrame(animate);
+      };
+
+      requestAnimationFrame(animate);
+
+      // Also burst when user clicks on screen
+      document.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+          // Launch a rocket aiming for the mouse click coordinate!
+          rockets.push(new Rocket(e.clientX, canvas.height, e.clientX, e.clientY));
+        }
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        initVideo();
+        initCrackers();
+      });
+    } else {
+      initVideo();
+      initCrackers();
+    }
+
+    // Fetch live network statistics and telemetry logs
+    let baseRegistered = 12840;
+    let baseProtected = 9420;
+    let baseVerified = 43912;
+    let baseIntercepts = 318;
+
+    async function loadPublicStats() {
+      try {
+        const res = await fetch('/api/public/stats');
+        const result = await res.json();
+
+        if (result.success && result.data) {
+          const d = result.data;
+
+          // Use live values if they exist/are non-zero, otherwise fallback to mock values
+          const regVal = d.registered && d.registered > 0 ? d.registered : baseRegistered;
+          const protVal = d.protected && d.protected > 0 ? d.protected : baseProtected;
+          const verVal = d.verificationAttempts && d.verificationAttempts > 0 ? d.verificationAttempts : baseVerified;
+          const intVal = d.activeLeaksBlock && d.activeLeaksBlock > 0 ? d.activeLeaksBlock : baseIntercepts;
+
+          baseRegistered = regVal;
+          baseProtected = protVal;
+          baseVerified = verVal;
+          baseIntercepts = intVal;
+
+          updateStatsUI();
+
+          // Telemetry logs
+          const tickerBox = document.getElementById('telemetry-ticker-box');
+          tickerBox.innerHTML = '';
+          if (d.recentAlerts && d.recentAlerts.length > 0) {
+            d.recentAlerts.forEach(log => {
+              const item = document.createElement('div');
+              item.className = 'telemetry-item';
+              item.style.padding = '0.5rem 0.75rem';
+              item.style.borderRadius = 'var(--radius-sm)';
+              item.style.fontFamily = 'monospace';
+
+              if (log.styleClass === 'danger') {
+                item.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                item.style.borderLeft = '3px solid var(--error)';
+                item.style.color = '#ff8a8a';
+              } else {
+                item.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                item.style.borderLeft = '3px solid var(--accent)';
+                item.style.color = 'var(--accent)';
+              }
+
+              const localTime = new Date(log.time).toLocaleTimeString();
+              item.innerHTML = `<span style="opacity: 0.5;">[${localTime}]</span> ${log.label}`;
+              tickerBox.appendChild(item);
+            });
+          } else {
+            // Cool mock telemetry logs when fresh
+            const mockTelemetry = [
+              { label: "SHIELD PROT: JWT route guard handshake success from depot [DEPOT_BLR_01]", styleClass: "success", time: Date.now() - 4000 },
+              { label: "GEO SHIELD: Authorized geo check successful at retail hub [RETAIL_DEL_02]", styleClass: "success", time: Date.now() - 15000 },
+              { label: "DANGER LEVEL 1: Geofence mismatch blocked. Attempted coordinate spoofing ID: C8912A", styleClass: "danger", time: Date.now() - 32000 },
+              { label: "SHIELD INIT: Cryptographic batch QR verification generated for serial SN-90211", styleClass: "success", time: Date.now() - 58000 },
+            ];
+
+            mockTelemetry.forEach(log => {
+              const item = document.createElement('div');
+              item.className = 'telemetry-item';
+              item.style.padding = '0.5rem 0.75rem';
+              item.style.borderRadius = 'var(--radius-sm)';
+              item.style.fontFamily = 'monospace';
+
+              if (log.styleClass === 'danger') {
+                item.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                item.style.borderLeft = '3px solid var(--error)';
+                item.style.color = '#ff8a8a';
+              } else {
+                item.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                item.style.borderLeft = '3px solid var(--accent)';
+                item.style.color = 'var(--accent)';
+              }
+
+              const localTime = new Date(log.time).toLocaleTimeString();
+              item.innerHTML = `<span style="opacity: 0.5;">[${localTime}]</span> ${log.label}`;
+              tickerBox.appendChild(item);
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load public stats:", err);
+        updateStatsUI();
+      }
+    }
+
+    function updateStatsUI() {
+      document.getElementById('stat-registered').innerText = baseRegistered.toLocaleString();
+      document.getElementById('stat-protected').innerText = baseProtected.toLocaleString();
+      document.getElementById('stat-verified').innerText = baseVerified.toLocaleString();
+      document.getElementById('stat-intercepts').innerText = baseIntercepts.toLocaleString();
+    }
+
+    // Dynamic Live Simulation Ticks
+    setInterval(() => {
+      if (Math.random() > 0.25) {
+        baseVerified += Math.floor(Math.random() * 2) + 1;
+      }
+      if (Math.random() > 0.75) {
+        baseRegistered += 1;
+        if (Math.random() > 0.2) {
+          baseProtected += 1;
+        }
+      }
+      if (Math.random() > 0.9) {
+        baseIntercepts += 1;
+        const tickerBox = document.getElementById('telemetry-ticker-box');
+        if (tickerBox) {
+          const item = document.createElement('div');
+          item.className = 'telemetry-item';
+          item.style.padding = '0.5rem 0.75rem';
+          item.style.borderRadius = 'var(--radius-sm)';
+          item.style.fontFamily = 'monospace';
+          item.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+          item.style.borderLeft = '3px solid var(--error)';
+          item.style.color = '#ff8a8a';
+          item.innerHTML = `<span style="opacity: 0.5;">[${new Date().toLocaleTimeString()}]</span> WARNING: Intercepted unauthorized scan access attempt coordinate error.`;
+          tickerBox.insertBefore(item, tickerBox.firstChild);
+          while (tickerBox.children.length > 8) {
+            tickerBox.removeChild(tickerBox.lastChild);
+          }
+        }
+      }
+      updateStatsUI();
+    }, 4000);
+
+    // Bind Quick authentication search
+    const quickBtn = document.getElementById('btn-quick-verify');
+    if (quickBtn) {
+      quickBtn.addEventListener('click', () => {
+        const prodId = document.getElementById('quick-verify-id').value.trim();
+        if (prodId) {
+          window.location.href = `verify.html?productId=${encodeURIComponent(prodId)}`;
+        }
+      });
+      // Allow pressing enter key
+      document.getElementById('quick-verify-id').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          quickBtn.click();
+        }
+      });
+    }
+
+    // Call load public stats
+    loadPublicStats();
+
+    // FAQ Accordion Toggle Logic
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const answer = item.querySelector('.faq-answer');
+        const icon = item.querySelector('.faq-icon');
+        const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+
+        // Close all others first
+        faqItems.forEach(otherItem => {
+          const otherAnswer = otherItem.querySelector('.faq-answer');
+          const otherIcon = otherItem.querySelector('.faq-icon');
+          otherAnswer.style.maxHeight = '0px';
+          otherAnswer.style.marginTop = '0px';
+          otherIcon.innerHTML = '&#43;'; // Plus sign
+          otherItem.style.borderColor = 'var(--card-border)';
+        });
+
+        if (!isOpen) {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+          answer.style.marginTop = '1rem';
+          icon.innerHTML = '&minus;'; // Minus sign
+          item.style.borderColor = 'var(--accent)';
+        }
+      });
+    });
+
+    // Nodes Telemetry Ticker Initialization
+    async function initNodesTicker() {
+      const track = document.getElementById('nodes-ticker-track');
+      if (!track) return;
+
+      try {
+        const res = await fetch('/api/public/user-locations');
+        const result = await res.json();
+        if (!result.success || !result.data || result.data.length === 0) {
+          track.innerHTML = '<div style="color: var(--color-secondary); padding: 1.5rem; text-align: center; width: 100%;">No node telemetry available.</div>';
+          return;
+        }
+
+        // Use name attributes and reference roles
+        const nodes = result.data.map(n => ({
+          name: n.name || "Checkpoint Node",
+          role: n.role || "user"
+        }));
+
+        // Clone nodes list for infinite wrapping padding
+        const minCards = Math.ceil(window.innerWidth / 300) + 4;
+        let displayList = [...nodes];
+        while (displayList.length < minCards) {
+          displayList = displayList.concat(nodes);
+        }
+        // Duplicate the list one more time to support seamless wrapping
+        displayList = displayList.concat(displayList);
+
+        track.innerHTML = '';
+        displayList.forEach((node) => {
+          const card = document.createElement('div');
+          card.className = `ticker-card glass-card`;
+          card.style.flex = "0 0 280px";
+          card.style.padding = "1.5rem";
+          card.style.borderRadius = "var(--radius-md)";
+          card.style.textAlign = "center";
+          card.style.transition = "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+          card.style.transform = "scale(0.95)";
+          card.style.opacity = "0.6";
+          card.style.border = "1px solid var(--card-border)";
+
+          let emoji = "📍";
+          let roleLabel = "Visitor Scan";
+          if (node.role === 'admin') {
+            emoji = "🏭";
+            roleLabel = "Manufacturer Central Node";
+          } else if (node.role === 'distributor') {
+            emoji = "📦";
+            roleLabel = "Distributor Transit Depot";
+          } else if (node.role === 'retailer') {
+            emoji = "🏪";
+            roleLabel = "Retail Storefront Hub";
+          }
+
+          card.innerHTML = `
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">${emoji}</div>
+            <div style="font-weight: 700; color: var(--color-primary); font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${node.name}</div>
+            <div style="font-size: 0.72rem; color: var(--accent); text-transform: uppercase; font-weight: bold; letter-spacing: 1px; margin-top: 0.25rem;">${roleLabel}</div>
+          `;
+          track.appendChild(card);
+        });
+
+        let currentX = 0;
+        const cardWidth = 280 + 32; // card size + gap
+        const loopThreshold = nodes.length * cardWidth;
+
+        function animateTicker() {
+          currentX -= 1.0; // speed (pixels per frame)
+          if (Math.abs(currentX) >= loopThreshold) {
+            currentX = 0;
+          }
+          track.style.transform = `translateX(${currentX}px)`;
+
+          // Highlight center item
+          const cards = track.querySelectorAll('.ticker-card');
+          const viewportCenter = window.innerWidth / 2;
+          let closestCard = null;
+          let minDistance = Infinity;
+
+          cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const cardCenter = rect.left + rect.width / 2;
+            const distance = Math.abs(viewportCenter - cardCenter);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestCard = card;
+            }
+          });
+
+          cards.forEach(card => {
+            if (card === closestCard) {
+              card.style.transform = "scale(1.08)";
+              card.style.opacity = "1";
+              card.style.borderColor = "var(--accent)";
+              card.style.boxShadow = "var(--neon-glow)";
+            } else {
+              card.style.transform = "scale(0.92)";
+              card.style.opacity = "0.55";
+              card.style.borderColor = "var(--card-border)";
+              card.style.boxShadow = "none";
+            }
+          });
+
+          requestAnimationFrame(animateTicker);
+        }
+
+        animateTicker();
+      } catch (err) {
+        console.error("Failed loading nodes ticker:", err);
+      }
+    }
+
+    // Call init ticker
+    initNodesTicker();
+  </script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+</body>
+
+</html>

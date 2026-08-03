@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoLedger - Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <link rel="apple-touch-icon" href="/icons/icon.svg">
+</head>
+
+<body>
+
+    <div class="container">
+        <div
+            style="margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h2 style="font-size: 2rem; font-weight: 700;">Admin Request Console</h2>
+                <p style="color: var(--color-secondary);">Review, approve, or reject administrative location bypass
+                    requests.</p>
+            </div>
+            <div>
+                <button type="button" class="btn btn-secondary" id="btn-refresh" style="font-size: 0.9rem;">
+                    🔄 Refresh Table
+                </button>
+            </div>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Filter Control Card -->
+        <div class="card" style="margin-bottom: 2rem; padding: 1.25rem 2rem;">
+            <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+                    <label for="filter-prod-id">Filter by Product ID</label>
+                    <input type="text" id="filter-prod-id" placeholder="Start typing ID...">
+                </div>
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
+                    <label for="filter-status">Filter by Status</label>
+                    <select id="filter-status">
+                        <option value="ALL">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Request Listing Tables -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Info</th>
+                        <th>Verifier Location</th>
+                        <th>Coordinates</th>
+                        <th>Requested Date</th>
+                        <th>Bypass Status</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="requests-table-body">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--color-secondary); padding: 3rem;">
+                            Loading bypass requests from server...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/admin.js"></script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.log('SW registration failed:', err));
+        });
+      }
+    </script>
+</body>
+
+</html>

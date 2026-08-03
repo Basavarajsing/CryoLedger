@@ -1,0 +1,181 @@
+◇ injected env (4) from .env // tip: ⌘ override existing { override: true }
+Connecting to MongoDB...
+Connected.
+
+=== USERS ===
+Username: basavarajsing, Role: admin, Email: basavarajsing.1si23is010@gmail.com
+Username: basavarajsing bapparagi, Role: user, Email: basavarajsing2005@gmail.com
+Username: abdul n, Role: user, Email: 
+Username: dheeraj, Role: user, Email: 
+Username: basava, Role: distributor, Email: 
+Username: basavarajsingh, Role: distributor, Email: 
+Username: harsha d, Role: retailer, Email: 
+Username: admin_test_1783825899544, Role: admin, Email: 
+Username: dist_test_1783825899876, Role: distributor, Email: 
+Username: ret_test_1783825900062, Role: retailer, Email: 
+Username: admin_test_1783825989449, Role: admin, Email: 
+Username: dist_test_1783825989748, Role: distributor, Email: 
+Username: ret_test_1783825989853, Role: retailer, Email: 
+Username: admin_test_1783826372016, Role: admin, Email: 
+Username: dist_test_1783826372225, Role: distributor, Email: 
+Username: ret_test_1783826372330, Role: retailer, Email: 
+Username: admin_test_1783827253068, Role: admin, Email: 
+Username: dist_test_1783827253285, Role: distributor, Email: 
+Username: ret_test_1783827253382, Role: retailer, Email: 
+Username: dist_user_1783827253575, Role: distributor, Email: 
+Username: admin_test_1783827288896, Role: admin, Email: 
+Username: dist_test_1783827289101, Role: distributor, Email: 
+Username: ret_test_1783827289198, Role: retailer, Email: 
+Username: dist_user_1783827289539, Role: distributor, Email: 
+Username: admin_test_1783827297654, Role: admin, Email: 
+Username: dist_test_1783827297882, Role: distributor, Email: 
+Username: ret_test_1783827297992, Role: retailer, Email: 
+Username: dist_user_1783827298180, Role: distributor, Email: 
+Username: admin_test_1783827378195, Role: admin, Email: 
+Username: dist_test_1783827378623, Role: distributor, Email: 
+Username: ret_test_1783827378747, Role: retailer, Email: 
+Username: dist_user_1783827378979, Role: distributor, Email: 
+Username: customer_test_1783827379388, Role: user, Email: 
+Username: admin_test_1783827976408, Role: admin, Email: 
+Username: dist_test_1783827976612, Role: distributor, Email: 
+Username: ret_test_1783827976715, Role: retailer, Email: 
+Username: dist_user_1783827976900, Role: distributor, Email: 
+Username: customer_test_1783827977278, Role: user, Email: 
+Username: admin_test_1783828943732, Role: admin, Email: 
+Username: dist_test_1783828943999, Role: distributor, Email: 
+Username: ret_test_1783828944170, Role: retailer, Email: 
+Username: dist_user_1783828944352, Role: distributor, Email: 
+Username: customer_test_1783828944758, Role: user, Email: 
+Username: admin_test_1783829022836, Role: admin, Email: 
+Username: dist_test_1783829023046, Role: distributor, Email: 
+Username: ret_test_1783829023142, Role: retailer, Email: 
+Username: cust_target_1783829023279, Role: user, Email: 
+Username: admin_test_1783829068635, Role: admin, Email: 
+Username: dist_test_1783829068837, Role: distributor, Email: 
+Username: ret_test_1783829068934, Role: retailer, Email: 
+Username: cust_target_1783829069055, Role: user, Email: 
+Username: admin_test_1783829105900, Role: admin, Email: 
+Username: dist_test_1783829106100, Role: distributor, Email: 
+Username: ret_test_1783829106192, Role: retailer, Email: 
+Username: cust_target_1783829106310, Role: user, Email: 
+Username: admin_test_1783829129772, Role: admin, Email: 
+Username: dist_test_1783829129971, Role: distributor, Email: 
+Username: ret_test_1783829130073, Role: retailer, Email: 
+Username: cust_target_1783829130206, Role: user, Email: 
+Username: admin_test_1783829186332, Role: admin, Email: 
+Username: dist_test_1783829186593, Role: distributor, Email: 
+Username: ret_test_1783829186701, Role: retailer, Email: 
+Username: cust_target_1783829186887, Role: user, Email: targetcustomer@example.com
+Username: dist_user_1783829187287, Role: distributor, Email: 
+Username: customer_test_1783829187679, Role: user, Email: 
+Username: admin_test_1783829647327, Role: admin, Email: 
+Username: dist_test_1783829647571, Role: distributor, Email: 
+Username: ret_test_1783829647840, Role: retailer, Email: 
+Username: cust_target_1783829648049, Role: user, Email: targetcustomer@example.com
+Username: dist_user_1783829648334, Role: distributor, Email: 
+Username: customer_test_1783829648738, Role: user, Email: cust_changed@example.com
+Username: admin_test_1783829667727, Role: admin, Email: 
+Username: dist_test_1783829668029, Role: distributor, Email: 
+Username: ret_test_1783829668133, Role: retailer, Email: 
+Username: cust_target_1783829668344, Role: user, Email: targetcustomer@example.com
+Username: dist_user_1783829668657, Role: distributor, Email: 
+Username: customer_test_1783829669066, Role: user, Email: cust_changed@example.com
+Username: admin_1783843038947, Role: admin, Email: admin@cryoledger.com
+Username: admin_1783843132570, Role: admin, Email: admin@cryoledger.com
+Username: dist_1783843132570, Role: distributor, Email: distributor@cryoledger.com
+Username: ret_1783843132570, Role: retailer, Email: retailer@cryoledger.com
+Username: admin_1783843329587, Role: admin, Email: admin@cryoledger.com
+Username: cust_1783843329587, Role: user, Email: customer@cryoledger.com
+Username: dist_1783843329587, Role: distributor, Email: distributor@cryoledger.com
+Username: ret_1783843329587, Role: retailer, Email: retailer@cryoledger.com
+Username: admin_1783843366754, Role: admin, Email: admin@cryoledger.com
+Username: cust_1783843366754, Role: user, Email: customer@cryoledger.com
+Username: dist_1783843366754, Role: distributor, Email: distributor@cryoledger.com
+Username: ret_1783843366754, Role: retailer, Email: retailer@cryoledger.com
+Username: admin_1783843431705, Role: admin, Email: admin@cryoledger.com
+Username: cust_1783843431705, Role: user, Email: customer@cryoledger.com
+Username: dist_1783843431705, Role: distributor, Email: distributor@cryoledger.com
+Username: ret_1783843431705, Role: retailer, Email: retailer@cryoledger.com
+Username: admin_1783843637012, Role: admin, Email: admin@cryoledger.com
+Username: cust_1783843637012, Role: user, Email: customer@cryoledger.com
+Username: admin_debug_1783843648422, Role: admin, Email: 
+Username: admin_1783845074679, Role: admin, Email: admin@cryoledger.com
+Username: cust_1783845074679, Role: user, Email: customer@cryoledger.com
+Username: admin_1783845731156, Role: admin, Email: admin@cryoledger.com
+Username: cust_1783845731156, Role: user, Email: customer@cryoledger.com
+Username: admin_1783846297124, Role: admin, Email: admin@cryoledger.com
+Username: cust_1783846297124, Role: user, Email: customer@cryoledger.com
+Username: boss, Role: admin, Email: 1si23is010@sit.ac.in
+Username: admin_1783858708067, Role: admin, Email: admin@cryoledger.com
+Username: cust_1783858708067, Role: user, Email: customer@cryoledger.com
+Username: admin_1783858738595, Role: admin, Email: admin@cryoledger.com
+Username: cust_1783858738595, Role: user, Email: customer@cryoledger.com
+Username: admin_1783916817130, Role: admin, Email: admin_1783916817130@cryoledger.com
+Username: cust_1783916817130, Role: user, Email: customer_1783916817130@cryoledger.com
+Username: dist_1783916817130, Role: distributor, Email: distributor_1783916817130@cryoledger.com
+Username: ret_1783916817130, Role: retailer, Email: retailer_1783916817130@cryoledger.com
+Username: admin_1783916924905, Role: admin, Email: admin_1783916924905@cryoledger.com
+Username: cust_1783916924905, Role: user, Email: customer_1783916924905@cryoledger.com
+Username: dist_1783916924905, Role: distributor, Email: distributor_1783916924905@cryoledger.com
+Username: ret_1783916924905, Role: retailer, Email: retailer_1783916924905@cryoledger.com
+Username: admin_1783917145737, Role: admin, Email: admin_1783917145737@cryoledger.com
+Username: cust_1783917145737, Role: user, Email: customer_1783917145737@cryoledger.com
+
+=== DISTRIBUTORS ===
+ID: BASAVARAJSINGH, Name: Karnataka State Permit, Latitude: 15.105697, Longitude: 76.343014
+ID: DIST_TEST_1783825899876, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783825989748, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783826372225, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783827253285, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783827289101, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783827297882, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783827378623, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783827976612, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783828943999, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783829023046, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783829068837, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783829106100, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783829129971, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783829186593, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783829647571, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_TEST_1783829668029, Name: Distributor Test Corp, Latitude: 12.345678, Longitude: 76.54321
+ID: DIST_1783843132570, Name: Test Distributor Depot, Latitude: 12.9716, Longitude: 77.5946
+ID: DIST_1783843329587, Name: Test Distributor Depot, Latitude: 12.9716, Longitude: 77.5946
+ID: DIST_1783843366754, Name: Test Distributor Depot, Latitude: 12.9716, Longitude: 77.5946
+ID: DIST_1783843431705, Name: Test Distributor Depot, Latitude: 12.9716, Longitude: 77.5946
+ID: DIST_1783916817130, Name: Test Distributor Depot, Latitude: 12.9716, Longitude: 77.5946
+ID: DIST_1783916924905, Name: Test Distributor Depot, Latitude: 12.9716, Longitude: 77.5946
+
+=== RETAILERS ===
+ID: HARSHA D, Name: KSP, Latitude: 16.096854, Longitude: 76.791963
+ID: RET_TEST_1783825900062, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783825989853, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783826372330, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783827253382, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783827289198, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783827297992, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783827378747, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783827976715, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783828944170, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783829023142, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783829068934, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783829106192, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783829130073, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783829186701, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783829647840, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_TEST_1783829668133, Name: Retailer Test Shop, Latitude: 12.355678, Longitude: 76.55321
+ID: RET_1783843132570, Name: Test Retailer Outlet, Latitude: 19.076, Longitude: 72.8777
+ID: RET_1783843329587, Name: Test Retailer Outlet, Latitude: 19.076, Longitude: 72.8777
+ID: RET_1783843366754, Name: Test Retailer Outlet, Latitude: 19.076, Longitude: 72.8777
+ID: RET_1783843431705, Name: Test Retailer Outlet, Latitude: 19.076, Longitude: 72.8777
+ID: RET_1783916817130, Name: Test Retailer Outlet, Latitude: 19.076, Longitude: 72.8777
+ID: RET_1783916924905, Name: Test Retailer Outlet, Latitude: 19.076, Longitude: 72.8777
+
+=== PRODUCTS ===
+Product ID: SLN123, Name: Hero Honda Bike, Distributor: BASAVARAJSINGH, DistributorStatus: Dispatched, Retailer: HARSHA D, RetailerStatus: Dispatched, TargetCust: 
+Product ID: MSN 4567, Name: AeroPlane, Distributor: BASAVARAJSINGH, DistributorStatus: Dispatched, Retailer: HARSHA D, RetailerStatus: Dispatched, TargetCust: basavarajsing bapparagi
+Product ID: Wat1010, Name: Watch Clock, Distributor: BASAVARAJSINGH, DistributorStatus: Assigned, Retailer: , RetailerStatus: Pending, TargetCust: basavarajsing bapparagi
+Product ID: PROD-TEST-1783916817130, Name: Cryogenic Vault Safe V1, Distributor: , DistributorStatus: Pending, Retailer: , RetailerStatus: Pending, TargetCust: 
+Product ID: PROD-TEST-1783916924905, Name: Cryogenic Vault Safe V1, Distributor: , DistributorStatus: Pending, Retailer: , RetailerStatus: Pending, TargetCust: 
+
+Done.
