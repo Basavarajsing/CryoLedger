@@ -1,102 +1,251 @@
-# CryoLedger: Product Authentication & Authorized Location Verification System
+# 🚀 CryoLedger
 
-CryoLedger is an advanced, location-intelligent supply chain assurance platform designed to help manufacturers reduce grey-market distribution, verify genuine product chains, and authenticate origins.
+CryoLedger is a secure Product Authentication and Authorized Location Verification System that helps manufacturers, distributors, retailers, and customers verify product authenticity while preventing counterfeit products through QR code verification, GPS-based location validation, warranty management, and supply chain tracking.
 
----
+## 🌐 Live Demo
 
-## 🚀 Key Features
-
-*   **Secure Product Registration:** Manufacturers can register products, set headquarter coordinates, and assign multiple authorized retail or service centers.
-*   **Role-based Authentication:** Secure access utilizing JWT (JSON Web Tokens) for Admins, Manufacturers, Retailers, and Users.
-*   **Coordinate-Based Verification:** Evaluates verifier latitude/longitude coordinates against registered authorized centers using the mathematical **Haversine Distance Formula** (100 meters default radius).
-*   **Administrative Bypass Flow:** Access requests can be sent by inspectors if outside designated zones. Admins can review, approve, or reject bypass requests in real-time.
-*   **QR Code Serialization:** Automatically generates a high-contrast QR code for each registered product linking to `/verify.html?productId=ID`.
-*   **Nominatim Search Integration:** Built-in OSM mapping and geocoding search for simplified coordinates configuration on an interactive map.
+**Website:** https://cryoledger-backend.onrender.com
 
 ---
 
-## 🛠️ Technology Stack
+# 📖 Overview
 
-1.  **Backend:** Node.js, Express.js, MongoDB Atlas, Mongoose, `qrcode`, `jsonwebtoken`, `bcryptjs`.
-2.  **Frontend:** Vanilla HTML5, Vanilla CSS3, Vanilla JavaScript, Leaflet.js with OpenStreetMap.
-3.  **APIs:** Nominatim Search API (Free geocoding).
+Counterfeit products are a major challenge in today's supply chain. CryoLedger provides a secure platform where every product is registered with a unique QR code and verified only from authorized locations. The system ensures transparency, improves customer trust, and enables end-to-end product tracking from manufacturer to customer.
 
 ---
 
-## 🗂️ Project Directory Structure
+# ✨ Features
 
-```text
+### 🔐 Authentication
+- User Registration
+- Secure Login
+- JWT Authentication
+- Password Encryption
+- Forgot Password
+- Reset Password
+- Role-Based Access Control
+
+### 👥 User Roles
+- Admin
+- Customer
+- Distributor
+- Retailer
+
+### 📦 Product Management
+- Add New Products
+- Product Registration
+- Product Details Management
+- QR Code Generation
+- Product Verification
+- Product Passport
+
+### 📍 Location Verification
+- GPS-based Authentication
+- Authorized Location Validation
+- Unauthorized Location Detection
+- Distance-based Verification
+
+### 🔄 Supply Chain Tracking
+- Manufacturer Tracking
+- Distributor Tracking
+- Retailer Tracking
+- Customer Verification
+- Complete Product Journey Timeline
+
+### 📱 QR Code System
+- Automatic QR Code Generation
+- Product Authentication
+- Instant Verification
+
+### 🛡 Warranty Management
+- Warranty Activation
+- Warranty Status
+- Warranty Tracking
+- Warranty Expiry Management
+
+### 📊 Dashboard & Analytics
+- Product Statistics
+- Verification Reports
+- Warranty Analytics
+- Unauthorized Access Reports
+- Supply Chain Analytics
+
+### 📧 Email Notifications
+- Welcome Email
+- Login Alerts
+- Password Reset
+- Product Verification Notifications
+- Delivery Notifications
+- Warranty Notifications
+
+---
+
+# 🛠 Technology Stack
+
+## Frontend
+- HTML5
+- CSS3
+- JavaScript
+
+## Backend
+- Node.js
+- Express.js
+
+## Database
+- MongoDB Atlas
+- Mongoose
+
+## Authentication
+- JSON Web Token (JWT)
+- bcryptjs
+
+## Additional Technologies
+- QRCode
+- Nodemailer
+- dotenv
+- CORS
+
+---
+
+# 📂 Project Structure
+
+```
 CryoLedger/
-├── models/                      # MongoDB Mongoose Schemas (Product, User, etc.)
-├── public/                      # Static Assets Served by Express (Frontend)
-├── services/                    # Email and other business logic services
-├── utils/                       # Generic helpers
-├── .env.example                 # Example environment variables
-├── .gitignore                   # Ignored files (node_modules, logs, env)
-├── package.json                 # Dependency manifests
-├── server.js                    # Core Express server & API routes
-└── README.md                    # Project guidance
+│
+├── public/
+├── models/
+├── services/
+├── utils/
+├── package.json
+├── server.js
+├── .env
+└── README.md
 ```
 
 ---
 
-## 💾 Installation & Setup
+# ⚙ Installation
 
-### Prerequisites
-*   **Node.js** (v16.0 or higher recommended)
-*   **MongoDB Atlas** account (or local MongoDB)
-*   **Git**
+Clone the repository
 
-### 1. Download Dependencies
+```bash
+git clone https://github.com/YOUR_GITHUB_USERNAME/CryoLedger.git
+```
+
+Go to project folder
+
+```bash
+cd CryoLedger
+```
+
+Install dependencies
+
 ```bash
 npm install
 ```
 
-### 2. Environment Variables
-Copy `.env.example` to `.env` and fill in your values. Do not commit `.env` to version control!
-```bash
-cp .env.example .env
-```
-**Required Variables:**
-- `MONGODB_URI`: Connection string to your database (Atlas)
-- `EMAIL_USER`: App email
-- `EMAIL_PASS`: App email password
-- `JWT_SECRET`: Secret hash for JWT configuration
+Create a `.env` file
 
-### 3. Start the Application
-Initialize the Express server process:
-```bash
-npm run dev
+```env
+MONGODB_URI=Your_MongoDB_Atlas_URI
+
+JWT_SECRET=Your_JWT_Secret
+
+EMAIL_USER=Your_Email
+
+EMAIL_PASS=Your_Email_Password
 ```
-The server will boot on **`http://localhost:5000`**.
+
+Start the application
+
+```bash
+npm start
+```
+
+Open your browser
+
+```
+http://localhost:5000
+```
 
 ---
 
-## 🚀 Build & Deployment Instructions
+# 🚀 Deployment
 
-### Standalone Monolith (Render)
-As the frontend is currently served statically through the Node.js backend:
-1. Push this repository to GitHub.
-2. Sign up on [Render](https://render.com).
-3. Create a new "Web Service" and connect your GitHub repo.
-4. Build Command: `npm install`
-5. Start Command: `npm start`
-6. Enter Environment Variables from your `.env` securely into Render.
-7. Click "Deploy".
-
-### Frontend (Vercel / Netlify) [Optional Split]
-To deploy the frontend separately on Vercel:
-1. Connect Vercel to your GitHub repository.
-2. Set the "Root Directory" to `public`.
-3. In `public/js/utils.js` (or similar network files), update API calls from relative paths (`/api/...`) to the remote Render backend absolute URL (`https://your-render-backend.onrender.com/api/...`).
+- Backend: Render
+- Database: MongoDB Atlas
+- Source Code: GitHub
 
 ---
 
-## 🌐 Application Endpoints
+# 🔒 Security Features
 
-Once the platform is running locally, access these entrypoints:
-*   **Home Dashboard:** `http://localhost:5000/index.html`
-*   **Add Product Form:** `http://localhost:5000/add-product.html`
-*   **Verify Coordinates Form:** `http://localhost:5000/verify.html`
-*   **Admin Bypass Console:** `http://localhost:5000/admin.html`
-*   **Audit Records Directory:** `http://localhost:5000/records.html`
+- JWT Authentication
+- Password Hashing
+- Role-Based Authorization
+- Secure Environment Variables
+- Protected API Routes
+- CORS Configuration
+
+---
+
+# 🎯 Future Improvements
+
+- Progressive Web App (PWA)
+- Mobile Application
+- Push Notifications
+- AI-based Counterfeit Detection
+- Blockchain Integration
+- Advanced Analytics Dashboard
+- Multi-language Support
+
+---
+
+# 📸 Screenshots
+
+Add screenshots of:
+
+- Home Page
+- Login Page
+- Registration Page
+- Admin Dashboard
+- Product Management
+- QR Code Verification
+- Warranty Dashboard
+- Analytics Dashboard
+
+---
+
+# 🎥 Demo Video
+
+Include a short demo video showing:
+
+- User Registration
+- Login
+- Product Registration
+- QR Verification
+- Warranty Activation
+- Dashboard
+- Supply Chain Tracking
+
+---
+
+# 👨‍💻 Developer
+
+**Basavarajsing Bapparagi**
+
+B.E. Information Science & Engineering
+
+Siddaganga Institute of Technology, Tumakuru
+
+---
+
+# 📄 License
+
+This project is developed for educational, research, and demonstration purposes.
+
+---
+
+# ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
