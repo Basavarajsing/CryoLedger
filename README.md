@@ -191,8 +191,6 @@ http://localhost:5000
 
 # 🎯 Future Improvements
 
-- Progressive Web App (PWA)
-- Mobile Application
 - Push Notifications
 - AI-based Counterfeit Detection
 - Blockchain Integration
@@ -201,34 +199,9 @@ http://localhost:5000
 
 ---
 
-# 📸 Screenshots
 
-Add screenshots of:
 
-- Home Page
-- Login Page
-- Registration Page
-- Admin Dashboard
-- Product Management
-- QR Code Verification
-- Warranty Dashboard
-- Analytics Dashboard
-
----
-
-# 🎥 Demo Video
-
-Include a short demo video showing:
-
-- User Registration
-- Login
-- Product Registration
-- QR Verification
-- Warranty Activation
-- Dashboard
-- Supply Chain Tracking
-
----
+#
 
 # 👨‍💻 Developer
 
