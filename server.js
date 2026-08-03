@@ -29,7 +29,13 @@ if (!MONGO_URI) {
 }
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production' && process.env.FRONTEND_URL
+        ? process.env.FRONTEND_URL
+        : '*',
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
