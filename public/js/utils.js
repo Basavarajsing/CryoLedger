@@ -4,50 +4,118 @@
  * Show a banner-style alert notification inside the element with id 'alert-container'.
  * If 'alert-container' doesn't exist, prepends to body.
  */
-function showAlert(message, type = 'info', duration = 6000) {
+function showAlert(message, type = 'info', duration = 5000) {
     let container = document.getElementById('alert-container');
     if (!container) {
         container = document.createElement('div');
         container.id = 'alert-container';
         container.style.position = 'fixed';
-        container.style.top = '80px';
+        container.style.top = '20px';
         container.style.right = '20px';
-        container.style.zIndex = '99999';
-        container.style.maxWidth = '400px';
+        container.style.zIndex = '999999';
         container.style.display = 'flex';
         container.style.flexDirection = 'column';
         container.style.gap = '10px';
+        container.style.pointerEvents = 'none';
         document.body.appendChild(container);
     }
 
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert alert-${type}`;
     alertDiv.style.margin = '0';
-    alertDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+    alertDiv.style.boxShadow = '0 8px 30px rgba(0,0,0,0.4)';
+    alertDiv.style.pointerEvents = 'auto';
+    alertDiv.style.minWidth = '300px';
+    alertDiv.style.maxWidth = '450px';
+    alertDiv.style.borderRadius = 'var(--radius-md)';
+    alertDiv.style.borderLeft = '4px solid';
+    alertDiv.style.animation = 'slideInDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+    alertDiv.style.opacity = '1';
 
-    // Icon based on type
     let icon = 'ℹ️';
-    if (type === 'success') icon = '✅';
-    if (type === 'error') icon = '❌';
-    if (type === 'warning') icon = '⚠️';
+    if (type === 'success') { icon = '✅'; alertDiv.style.borderLeftColor = 'var(--accent)'; }
+    if (type === 'error') { icon = '❌'; alertDiv.style.borderLeftColor = 'var(--error)'; }
+    if (type === 'warning') { icon = '⚠️'; alertDiv.style.borderLeftColor = 'var(--warning)'; }
 
     alertDiv.innerHTML = `
-    <span style="font-size: 1.2rem;">${icon}</span>
-    <div style="flex: 1;">${message}</div>
-    <span style="cursor:pointer; font-weight:bold;" onclick="this.parentElement.remove()">&times;</span>
+    <div style="display:flex; align-items:flex-start; gap: 0.75rem; width:100%;">
+        <span style="font-size: 1.25rem; margin-top:2px;">${icon}</span>
+        <div style="flex: 1; margin-top:2px; font-weight:500;">${message}</div>
+        <button style="background:transparent; border:none; color:inherit; font-size:1.25rem; line-height:1; cursor:pointer; padding:0; margin-left:10px; opacity:0.7;" onclick="this.closest('.alert').style.animation='slideOutRight 0.3s forwards'; setTimeout(() => this.closest('.alert').remove(), 300);">&times;</button>
+    </div>
   `;
 
     container.appendChild(alertDiv);
 
     if (duration > 0) {
         setTimeout(() => {
-            alertDiv.style.opacity = '0';
-            alertDiv.style.transform = 'translateY(-10px)';
-            alertDiv.style.transition = 'all 0.4s ease';
-            setTimeout(() => alertDiv.remove(), 400);
+            if (alertDiv && alertDiv.parentElement) {
+                alertDiv.style.animation = 'slideOutRight 0.3s forwards';
+                setTimeout(() => { if (alertDiv.parentElement) alertDiv.remove(); }, 300);
+            }
         }, duration);
     }
 }
+
+/** Loading State Utilities */
+function showLoading(btnId, loadingText = 'Processing...') {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.dataset.originalText = btn.innerHTML;
+    btn.setAttribute('disabled', 'true');
+    btn.innerHTML = `<span style="display:inline-block; width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle;"></span> <span style="vertical-align:middle;">${loadingText}</span>`;
+    btn.style.opacity = '0.8';
+    btn.style.cursor = 'not-allowed';
+}
+
+function hideLoading(btnId) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    if (btn.dataset.originalText) {
+        btn.innerHTML = btn.dataset.originalText;
+    }
+    btn.removeAttribute('disabled');
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+}
+
+/** Confirmation Dialog */
+window.confirmAction = function (message) {
+    return new Promise((resolve) => {
+        const backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop';
+        backdrop.style.zIndex = '100000';
+
+        const content = document.createElement('div');
+        content.className = 'modal-content';
+        content.style.maxWidth = '400px';
+        content.style.textAlign = 'center';
+        content.style.padding = '2rem';
+
+        content.innerHTML = `
+            <div style="font-size:2.5rem; margin-bottom:1rem; color:var(--warning);">⚠️</div>
+            <h3 style="font-size:1.2rem; color:var(--color-primary); margin-bottom:0.5rem;">Confirm Action</h3>
+            <p style="color:var(--color-secondary); font-size:0.95rem; margin-bottom:2rem;">${message}</p>
+            <div style="display:flex; gap:1rem; justify-content:center;">
+                <button id="confirm-btn-no" class="btn btn-secondary" style="flex:1;">Cancel</button>
+                <button id="confirm-btn-yes" class="btn btn-primary" style="flex:1; background:var(--error);">Confirm</button>
+            </div>
+        `;
+
+        backdrop.appendChild(content);
+        document.body.appendChild(backdrop);
+
+        document.getElementById('confirm-btn-no').addEventListener('click', () => {
+            backdrop.remove();
+            resolve(false);
+        });
+
+        document.getElementById('confirm-btn-yes').addEventListener('click', () => {
+            backdrop.remove();
+            resolve(true);
+        });
+    });
+};
 
 /**
  * Geolocation API wrapper
@@ -174,6 +242,7 @@ function createHeader(activePage = '') {
             <li><a href="add-product.html" class="${activePage === 'add-product' ? 'active' : ''}">Add Product</a></li>
             <li><a href="admin.html" class="${activePage === 'admin' ? 'active' : ''}">Bypass Console</a></li>
             <li><a href="records.html" class="${activePage === 'records' ? 'active' : ''}">Product Records</a></li>
+            <li><a href="users.html" class="${activePage === 'users' ? 'active' : ''}">User Management</a></li>
             <li><a href="profile.html" class="${activePage === 'profile' ? 'active' : ''}">Settings</a></li>
             ${headerNotificationsListHTML}
             <li><button onclick="logout()" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-left: 0.5rem; background-color: transparent; border-color: var(--error); color: var(--error); cursor: pointer;">Log Out</button></li>
@@ -380,12 +449,12 @@ async function authenticatedFetch(url, options = {}) {
  * Page Access Guard.
  * Checks if user token exists and has the appropriate role.
  */
-function checkAccess(requiredRole) {
+function checkAccess(requiredRoles) {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
 
     if (!token) {
-        if (requiredRole === 'admin') {
+        if (requiredRoles === 'admin' || (Array.isArray(requiredRoles) && requiredRoles.includes('admin') && !requiredRoles.includes('user'))) {
             window.location.href = 'admin-login.html';
         } else {
             window.location.href = 'login.html';
@@ -393,15 +462,18 @@ function checkAccess(requiredRole) {
         return;
     }
 
-    if (requiredRole && role !== requiredRole) {
-        if (role === 'admin') {
-            window.location.href = 'admin-dashboard.html';
-        } else if (role === 'distributor') {
-            window.location.href = 'distributor-dashboard.html';
-        } else if (role === 'retailer') {
-            window.location.href = 'retailer-dashboard.html';
-        } else {
-            window.location.href = 'user-dashboard.html';
+    if (requiredRoles) {
+        const allowedRoles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles];
+        if (!allowedRoles.includes(role)) {
+            if (role === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+            } else if (role === 'distributor') {
+                window.location.href = 'distributor-dashboard.html';
+            } else if (role === 'retailer') {
+                window.location.href = 'retailer-dashboard.html';
+            } else {
+                window.location.href = 'user-dashboard.html';
+            }
         }
     }
 }

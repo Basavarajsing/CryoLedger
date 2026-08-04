@@ -1,5 +1,5 @@
 // Verify Product Page Logic
-checkAccess('user');
+checkAccess(['admin', 'user', 'distributor', 'retailer']);
 
 let pickerMap = null;
 let pickerMarker = null;
@@ -181,8 +181,7 @@ document.getElementById('btn-verify-product').addEventListener('click', async ()
     }
 
     const verifyBtn = document.getElementById('btn-verify-product');
-    verifyBtn.setAttribute('disabled', 'true');
-    verifyBtn.innerText = "Verifying product...";
+    showLoading('btn-verify-product', 'Authenticating...');
 
     try {
         // Call verification GET API
@@ -235,8 +234,7 @@ document.getElementById('btn-verify-product').addEventListener('click', async ()
         console.error("Verification error:", error);
         showAlert("Network / Server connection error.", "error");
     } finally {
-        verifyBtn.removeAttribute('disabled');
-        verifyBtn.innerText = "🔐 Authenticate Product & Coordinates";
+        hideLoading('btn-verify-product');
     }
 });
 
@@ -253,8 +251,7 @@ document.getElementById('btn-request-access').addEventListener('click', async ()
     }
 
     const reqBtn = document.getElementById('btn-request-access');
-    reqBtn.setAttribute('disabled', 'true');
-    reqBtn.innerText = "Submitting request...";
+    showLoading('btn-request-access', 'Submitting...');
 
     try {
         const payload = {
@@ -283,8 +280,7 @@ document.getElementById('btn-request-access').addEventListener('click', async ()
         console.error("Submission request error:", error);
         showAlert("Server connection failed.", "error");
     } finally {
-        reqBtn.removeAttribute('disabled');
-        reqBtn.innerText = "🛡️ Request Administrative Bypass Approval";
+        hideLoading('btn-request-access');
     }
 });
 
@@ -593,8 +589,7 @@ function setupFeedbackStarListeners() {
                 return;
             }
 
-            subBtn.setAttribute('disabled', 'true');
-            subBtn.innerText = "Submitting...";
+            showLoading('btn-submit-feedback', 'Submitting...');
 
             try {
                 const res = await fetch('/api/product/feedback', {
@@ -630,14 +625,12 @@ function setupFeedbackStarListeners() {
                     subBtn.innerText = "Feedback Contributed";
                 } else {
                     showAlert(result.message || "Submission failed.", "error");
-                    subBtn.removeAttribute('disabled');
-                    subBtn.innerText = "Submit Feedback";
+                    hideLoading('btn-submit-feedback');
                 }
             } catch (err) {
                 console.error(err);
                 showAlert("Network connection error.", "error");
-                subBtn.removeAttribute('disabled');
-                subBtn.innerText = "Submit Feedback";
+                hideLoading('btn-submit-feedback');
             }
         });
     }
@@ -667,8 +660,7 @@ if (btnRecallReturn) {
             return;
         }
 
-        btnRecallReturn.setAttribute('disabled', 'true');
-        btnRecallReturn.innerText = "Authorizing...";
+        showLoading('btn-submit-recall-return', 'Authorizing...');
 
         try {
             const res = await authenticatedFetch('/api/product/return-recall', {
@@ -690,8 +682,7 @@ if (btnRecallReturn) {
             console.error(err);
             showAlert("Network connection error.", "error");
         } finally {
-            btnRecallReturn.removeAttribute('disabled');
-            btnRecallReturn.innerText = "Confirm Return";
+            hideLoading('btn-submit-recall-return');
         }
     });
 }

@@ -311,8 +311,7 @@ document.getElementById('btn-save-product').addEventListener('click', async () =
     };
 
     const saveBtn = document.getElementById('btn-save-product');
-    saveBtn.setAttribute('disabled', 'true');
-    saveBtn.innerText = "Saving product...";
+    showLoading('btn-save-product', 'Saving...');
 
     try {
         const response = await authenticatedFetch('/add-product', {
@@ -370,8 +369,7 @@ document.getElementById('btn-save-product').addEventListener('click', async () =
         console.error("Save product err:", error);
         showAlert("Connection error. Could not reach server.", "error");
     } finally {
-        saveBtn.removeAttribute('disabled');
-        saveBtn.innerText = "💾 Save Product & Generate QR Code";
+        hideLoading('btn-save-product');
     }
 });
 

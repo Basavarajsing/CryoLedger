@@ -28,7 +28,11 @@ if (!MONGO_URI) {
     process.exit(1);
 }
 
-// Middleware
+// Production Middlewares
+const helmet = require('helmet');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit');
+
 const corsOptions = {
     origin: process.env.NODE_ENV === 'production' && process.env.FRONTEND_URL
         ? process.env.FRONTEND_URL
@@ -36,11 +40,28 @@ const corsOptions = {
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
+
+// Security & Performance
+app.use(helmet({
+    contentSecurityPolicy: false // Allow external scripts/fonts/maps since we use several CDNs
+}));
+app.use(compression());
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 1000 // Limit each IP to 1000 requests per window
+});
+app.use(limiter);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static frontend files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Health check endpoint for splash screen
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
 
 // Google Search Console Verification Route
 app.get('/googledf76de3b5aef9899.html', (req, res) => {
@@ -2823,8 +2844,22 @@ app.post('/api/email/test', async (req, res) => {
     }
 });
 
-// Start Server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+// User Management Route
+app.get('/api/admin/users', authenticateJWT, requireRole(['admin']), async (req, res) => {
+    try {
+        const users = await User.find({}, '-password').sort({ createdAt: -1 });
+        res.json({ success: true, data: users });
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Failed to fetch users' });
+    }
 });
+
+// Start Server
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
 

@@ -39,9 +39,28 @@ function renderProductsTable() {
   const tbody = document.getElementById('products-table-body');
   const searchVal = document.getElementById('search-prod').value.trim().toLowerCase();
 
-  const filtered = allProducts.filter(p => {
-    return p.productId.toLowerCase().includes(searchVal) || p.name.toLowerCase().includes(searchVal);
+  const filterStatus = document.getElementById('filter-status') ? document.getElementById('filter-status').value : 'all';
+  const sortOption = document.getElementById('sort-prod') ? document.getElementById('sort-prod').value : 'newest';
+
+  let filtered = allProducts.filter(p => {
+    const matchSearch = p.productId.toLowerCase().includes(searchVal) || p.name.toLowerCase().includes(searchVal);
+
+    let matchFilter = true;
+    if (filterStatus === 'verified') matchFilter = p.scanCount > 0;
+    else if (filterStatus === 'unverified') matchFilter = !p.scanCount || p.scanCount === 0;
+    else if (filterStatus === 'warranty-active') matchFilter = p.warrantyStatus === 'Active';
+    else if (filterStatus === 'warranty-expired') matchFilter = p.warrantyStatus === 'Expired';
+
+    return matchSearch && matchFilter;
   });
+
+  if (sortOption === 'scans-high') {
+    filtered.sort((a, b) => (b.scanCount || 0) - (a.scanCount || 0));
+  } else if (sortOption === 'oldest') {
+    filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  } else {
+    filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // default newest
+  }
 
   if (filtered.length === 0) {
     tbody.innerHTML = `
@@ -365,6 +384,7 @@ document.getElementById('btn-submit-recall').addEventListener('click', async () 
     return;
   }
 
+  showLoading('btn-submit-recall', 'Submitting...');
   try {
     const res = await authenticatedFetch('/api/admin/recall-product', {
       method: 'POST',
@@ -393,6 +413,8 @@ document.getElementById('btn-submit-recall').addEventListener('click', async () 
     }
   } catch (error) {
     showAlert("Recall logging error.", "error");
+  } finally {
+    hideLoading('btn-submit-recall');
   }
 });
 
@@ -400,8 +422,11 @@ document.getElementById('btn-submit-recall').addEventListener('click', async () 
 document.getElementById('btn-clear-recall').addEventListener('click', async () => {
   if (!activeDetailProduct) return;
 
-  const conf = confirm(`Are you sure you want to clear the active recall for "${activeDetailProduct.name}"?`);
+  const conf = await confirmAction(`Are you sure you want to clear the active recall for "${activeDetailProduct.name}"?`);
   if (!conf) return;
+
+  const btn = document.getElementById('btn-clear-recall');
+  showLoading('btn-clear-recall', 'Clearing...');
 
   try {
     const res = await authenticatedFetch('/api/admin/cancel-recall', {
@@ -420,6 +445,8 @@ document.getElementById('btn-clear-recall').addEventListener('click', async () =
     }
   } catch (error) {
     showAlert("Recall cancellation error.", "error");
+  } finally {
+    hideLoading('btn-clear-recall');
   }
 });
 
@@ -427,8 +454,10 @@ document.getElementById('btn-clear-recall').addEventListener('click', async () =
 document.getElementById('btn-repair-recall').addEventListener('click', async () => {
   if (!activeDetailProduct) return;
 
-  const conf = confirm(`Are you sure you want to repair and re-release product "${activeDetailProduct.productId}"?`);
+  const conf = await confirmAction(`Are you sure you want to repair and re-release product "${activeDetailProduct.productId}"?`);
   if (!conf) return;
+
+  showLoading('btn-repair-recall', 'Repairing...');
 
   try {
     const res = await authenticatedFetch(`/api/admin/product/${activeDetailProduct.productId}/repair`, {
@@ -447,6 +476,8 @@ document.getElementById('btn-repair-recall').addEventListener('click', async () 
   } catch (err) {
     console.error(err);
     showAlert("Error executing repair request.", "error");
+  } finally {
+    hideLoading('btn-repair-recall');
   }
 });
 
@@ -590,6 +621,7 @@ document.getElementById('btn-submit-logistics').addEventListener('click', async 
     return;
   }
 
+  showLoading('btn-submit-logistics', 'Assigning...');
   try {
     const res = await authenticatedFetch(url, {
       method: 'POST',
@@ -607,6 +639,8 @@ document.getElementById('btn-submit-logistics').addEventListener('click', async 
     }
   } catch (error) {
     showAlert("Logistics connection error.", "error");
+  } finally {
+    hideLoading('btn-submit-logistics');
   }
 });
 
@@ -614,8 +648,10 @@ document.getElementById('btn-submit-logistics').addEventListener('click', async 
 document.getElementById('btn-delete-product').addEventListener('click', async () => {
   if (!activeDetailProduct) return;
 
-  const conf = confirm(`⚠️ CRITICAL COMMAND ALERT: Are you completely sure you want to remove "${activeDetailProduct.name}" (ID: ${activeDetailProduct.productId}) and clear all associated access log files and details permanently?`);
+  const conf = await confirmAction(`CRITICAL COMMAND ALERT: Are you completely sure you want to remove "${activeDetailProduct.name}" (ID: ${activeDetailProduct.productId}) and clear all associated details permanently?`);
   if (!conf) return;
+
+  showLoading('btn-delete-product', 'Deleting...');
 
   try {
     const res = await authenticatedFetch(`/api/admin/product/${encodeURIComponent(activeDetailProduct.productId)}`, {
@@ -632,6 +668,8 @@ document.getElementById('btn-delete-product').addEventListener('click', async ()
     }
   } catch (error) {
     showAlert("Network failure while deleting.", "error");
+  } finally {
+    hideLoading('btn-delete-product');
   }
 });
 
@@ -726,8 +764,12 @@ window.closeAuditSection = function () {
   document.getElementById('audit-log-section').style.display = 'none';
 };
 
-// Bind local filter
+// Bind local filter and sort
 document.getElementById('search-prod').addEventListener('input', renderProductsTable);
+const filterStatusEl = document.getElementById('filter-status');
+if (filterStatusEl) filterStatusEl.addEventListener('change', renderProductsTable);
+const sortProdEl = document.getElementById('sort-prod');
+if (sortProdEl) sortProdEl.addEventListener('change', renderProductsTable);
 
 // Init fetch
 fetchProducts();
