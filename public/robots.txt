@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /api/
+Disallow: /qrcodes/
+Allow: /
+Sitemap: https://cryoledger-backend.onrender.com/sitemap.xml

@@ -5,6 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CryoLedger - Product Records</title>
+
+    <meta name="description" content="CryoLedger provides end-to-end supply chain assurance with GPS verification and cryptographic checks.">
+    <meta property="og:title" content="CryoLedger - Supply Chain Integrity">
+    <meta property="og:description" content="Secure Product Authentication System with Geo-Verification.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cryoledger-backend.onrender.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CryoLedger">
+    <meta name="twitter:description" content="Protecting trust through location-intelligent product authentication.">
+
+<link rel="canonical" href="https://cryoledger-backend.onrender.com/records.html">
+
     <link rel="stylesheet" href="styles.css">
 
     <!-- PWA -->
@@ -37,7 +49,7 @@
 
         <!-- Products List Table -->
         <div class="table-wrapper" style="margin-bottom: 3rem;">
-            <table>
+            <div class="table-responsive"><table>
                 <thead>
                     <tr>
                         <th>Product Details</th>
@@ -55,7 +67,7 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
         </div>
 
         <!-- Audit Log Section (Slides open when viewing a product's history) -->
@@ -75,7 +87,7 @@
             </div>
 
             <div class="table-wrapper">
-                <table>
+                <div class="table-responsive"><table>
                     <thead>
                         <tr>
                             <th>Timestamp</th>
@@ -88,7 +100,7 @@
                     <tbody id="audit-table-body">
                         <!-- Populated via JS -->
                     </tbody>
-                </table>
+                </table></div>
             </div>
         </div>
     </div>
