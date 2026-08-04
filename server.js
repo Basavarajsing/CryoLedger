@@ -41,6 +41,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Google Search Console Verification Route
+app.get('/googledf76de3b5aef9899.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'googledf76de3b5aef9899.html'));
+});
 // Ensure qrcodes directory exists and serve it
 const qrCodesDir = path.join(__dirname, 'public', 'qrcodes');
 if (!fs.existsSync(qrCodesDir)) {
@@ -2822,3 +2827,4 @@ app.post('/api/email/test', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
