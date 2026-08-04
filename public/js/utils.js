@@ -212,6 +212,9 @@ function createHeader(activePage = '') {
       <a href="index.html" class="logo">
         ❄️ Cryo<span>Ledger</span>
       </a>
+      <button class="hamburger-btn" onclick="document.querySelector('.nav-links').classList.toggle('nav-active'); this.classList.toggle('toggle');">
+        <span></span><span></span><span></span>
+      </button>
       <ul class="nav-links">
         ${navLinksHTML}
       </ul>
