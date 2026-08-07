@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CryoLedger - Profile & Settings</title>
-    <meta name="description" content="CryoLedger provides end-to-end supply chain assurance with GPS verification and cryptographic checks.">
+    <meta name="description"
+        content="CryoLedger provides end-to-end supply chain assurance with GPS verification and cryptographic checks.">
     <meta property="og:title" content="CryoLedger - Supply Chain Integrity">
     <meta property="og:description" content="Secure Product Authentication System with Geo-Verification.">
     <meta property="og:type" content="website">
@@ -18,95 +20,156 @@
     <meta name="theme-color" content="#10b981">
     <link rel="apple-touch-icon" href="/icons/icon.svg">
 </head>
-<body>
-  <div id="cryo-global-splash" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0B1120; z-index:9999999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.8s ease, visibility 0.8s ease;">
-    <style>
-      @keyframes cryoSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-      .cryo-spinner { width: 48px; height: 48px; border: 4px solid rgba(16,185,129,0.2); border-left-color: #10b981; border-radius: 50%; animation: cryoSpin 1s linear infinite; margin-top: 2rem; margin-bottom: 2rem; }
-      .cryo-logo-text { font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, #fff 30%, #10b981 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Outfit', sans-serif; display:flex; align-items:center; gap:0.5rem;}
-      @media(max-width: 600px) {
-         .cryo-logo-text { font-size: 2.2rem; }
-         .cryo-splash-msg { font-size: 0.95rem; text-align: center; padding: 0 1rem; }
-      }
-    </style>
-    <div class="cryo-logo-text">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      CryoLedger
-    </div>
-    <div class="cryo-spinner"></div>
-    <div class="cryo-splash-msg" style="color: #94a3b8; font-family: 'Inter', sans-serif; font-weight: 500;">Please wait while the application is loading...</div>
-  </div>
-  <script>
-    (function(){
-      let isReady = false;
-      let isWindowLoaded = false;
-      const checkReady = () => {
-        if(isReady && isWindowLoaded) {
-          const splash = document.getElementById('cryo-global-splash');
-          if(splash) {
-            splash.style.opacity = '0';
-            splash.style.visibility = 'hidden';
-            setTimeout(() => splash.remove(), 800);
-          }
-        }
-      };
-      window.addEventListener('load', () => { isWindowLoaded = true; checkReady(); });
-      const pingHealth = () => {
-        fetch('/api/health').then(res => {
-            if(res.ok) { isReady = true; checkReady(); } else { setTimeout(pingHealth, 1000); }
-          }).catch(() => { setTimeout(pingHealth, 1000); });
-      };
-      pingHealth();
-      setTimeout(() => { if(!isReady) { isReady = true; checkReady(); } }, 30000);
-    })();
-  </script>
 
-  <script src="js/utils.js"></script>
+<body>
+    <div id="cryo-global-splash"
+        style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0B1120; z-index:9999999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.8s ease, visibility 0.8s ease;">
+        <style>
+            @keyframes cryoSpin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .cryo-spinner {
+                width: 48px;
+                height: 48px;
+                border: 4px solid rgba(16, 185, 129, 0.2);
+                border-left-color: #10b981;
+                border-radius: 50%;
+                animation: cryoSpin 1s linear infinite;
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .cryo-logo-text {
+                font-size: 3rem;
+                font-weight: 800;
+                background: linear-gradient(135deg, #fff 30%, #10b981 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-family: 'Outfit', sans-serif;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            @media(max-width: 600px) {
+                .cryo-logo-text {
+                    font-size: 2.2rem;
+                }
+
+                .cryo-splash-msg {
+                    font-size: 0.95rem;
+                    text-align: center;
+                    padding: 0 1rem;
+                }
+            }
+        </style>
+        <div class="cryo-logo-text">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+            CryoLedger
+        </div>
+        <div class="cryo-spinner"></div>
+        <div class="cryo-splash-msg" style="color: #94a3b8; font-family: 'Inter', sans-serif; font-weight: 500;">Please
+            wait while the application is loading...</div>
+    </div>
+    <script>
+        (function () {
+            let isReady = false;
+            let isWindowLoaded = false;
+            const checkReady = () => {
+                if (isReady && isWindowLoaded) {
+                    const splash = document.getElementById('cryo-global-splash');
+                    if (splash) {
+                        splash.style.opacity = '0';
+                        splash.style.visibility = 'hidden';
+                        setTimeout(() => splash.remove(), 800);
+                    }
+                }
+            };
+            window.addEventListener('load', () => { isWindowLoaded = true; checkReady(); });
+            const pingHealth = () => {
+                fetch('/api/health').then(res => {
+                    if (res.ok) { isReady = true; checkReady(); } else { setTimeout(pingHealth, 1000); }
+                }).catch(() => { setTimeout(pingHealth, 1000); });
+            };
+            pingHealth();
+            setTimeout(() => { if (!isReady) { isReady = true; checkReady(); } }, 30000);
+        })();
+    </script>
+
+    <script src="js/utils.js"></script>
 
     <!-- Profile Page Wrapper -->
     <div class="container" style="max-width: 1000px; padding: 2rem 1rem;">
-        
-        <div class="hero" style="text-align: left; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); padding-bottom: 1rem;">
+
+        <div class="hero"
+            style="text-align: left; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); padding-bottom: 1rem;">
             <h1 style="font-size: 2rem; margin-bottom: 0.25rem;">Account Settings</h1>
-            <p style="margin:0; color: var(--color-secondary);">Manage your security credentials and public profile information.</p>
+            <p style="margin:0; color: var(--color-secondary);">Manage your security credentials and public profile
+                information.</p>
         </div>
 
         <div id="alert-container"></div>
 
-        <div style="display: grid; grid-template-columns: 250px 1fr; gap: 3rem; margin-top: 2rem;" class="profile-grid-layout">
-            
+        <div style="display: grid; grid-template-columns: 250px 1fr; gap: 3rem; margin-top: 2rem;"
+            class="profile-grid-layout">
+
             <!-- Left Sidebar -->
             <div class="profile-sidebar" style="border-right: 1px solid var(--card-border); padding-right: 1.5rem;">
                 <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="margin-bottom: 0.5rem;"><a href="#" style="display:block; padding: 0.75rem 1rem; background: var(--accent-light); color: var(--color-primary); border-radius: var(--radius-sm); font-weight: 600; text-decoration: none; border-left: 3px solid var(--accent);">User Profile</a></li>
-                    <li style="margin-bottom: 0.5rem;"><a href="#" onclick="showAlert('Notification preferences coming soon.', 'info')" style="display:block; padding: 0.75rem 1rem; color: var(--color-secondary); font-weight: 500; text-decoration: none; transition: var(--transition);">Notifications</a></li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            style="display:block; padding: 0.75rem 1rem; background: var(--accent-light); color: var(--color-primary); border-radius: var(--radius-sm); font-weight: 600; text-decoration: none; border-left: 3px solid var(--accent);">User
+                            Profile</a></li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#"
+                            onclick="showAlert('Notification preferences coming soon.', 'info')"
+                            style="display:block; padding: 0.75rem 1rem; color: var(--color-secondary); font-weight: 500; text-decoration: none; transition: var(--transition);">Notifications</a>
+                    </li>
                 </ul>
             </div>
 
             <!-- Right Content -->
             <div class="profile-content">
-                
+
                 <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
-                    <h3 style="color: var(--color-primary); margin-bottom: 1.5rem; font-size: 1.15rem;">Public Avatar</h3>
+                    <h3 style="color: var(--color-primary); margin-bottom: 1.5rem; font-size: 1.15rem;">Public Avatar
+                    </h3>
                     <div style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
-                        <div style="position: relative; cursor: pointer; flex-shrink: 0;" id="avatar-upload-container" title="Click to upload profile photo">
-                            <img id="profile-photo-preview" src="assets/default-avatar.png" alt="Profile" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--card-border); background-color: var(--bg-tertiary); box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: all 0.3s ease;">
-                            <div id="avatar-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; border-radius: 50%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: all 0.3s ease;">
+                        <div style="position: relative; cursor: pointer; flex-shrink: 0;" id="avatar-upload-container"
+                            title="Click to upload profile photo">
+                            <img id="profile-photo-preview" src="assets/default-avatar.png" alt="Profile"
+                                style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--card-border); background-color: var(--bg-tertiary); box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: all 0.3s ease;">
+                            <div id="avatar-overlay"
+                                style="position: absolute; top:0; left:0; width:100%; height:100%; border-radius: 50%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: all 0.3s ease;">
                                 <span style="color: white; font-size: 1.5rem;">📸</span>
                             </div>
                             <!-- Real File Input (Hidden) -->
-                            <input type="file" id="profile-photo-file" accept="image/png, image/jpeg, image/webp" style="display: none;">
+                            <input type="file" id="profile-photo-file" accept="image/png, image/jpeg, image/webp"
+                                style="display: none;">
                         </div>
                         <div style="flex: 1; min-width: 250px;">
-                            <p style="color: var(--color-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
-                                <strong>Click the profile circle to change your image.</strong><br><br><em style="color: var(--color-primary); opacity: 0.85;">"Because in a world of advanced geographic cryptography and anti-counterfeit logistics, we still need to know what you look like! 🌍📸"</em>
+                            <p
+                                style="color: var(--color-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                                <strong>Click the profile circle to change your image.</strong><br><br><em
+                                    style="color: var(--color-primary); opacity: 0.85;">"ಹೂವಿನ ನಗೆಯಂತೆ ನಿನ್ನ ಮುಖದ
+                                    ಕಾಂತಿ,ಕಂಡಕ್ಷಣ ಮಾಯವಾಗುವುದು ಮನದ ಶಾಂತಿ.ಬಣ್ಣಿಸಲೇ ಹೇಗೆ ಈ ಮುಗ್ದ ಸೌಂದರ್ಯವ,ಕಣ್ಣುಗಳು ಸೆಳೆಯುವ
+                                    ಈ ದಿವ್ಯ ರೂಪವ 🌍📸"</em>
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
-                    <h3 style="color: var(--color-primary); margin-bottom: 1.5rem; font-size: 1.15rem;">Personal Details</h3>
+                    <h3 style="color: var(--color-primary); margin-bottom: 1.5rem; font-size: 1.15rem;">Personal Details
+                    </h3>
                     <form id="profile-info-form">
                         <div class="grid-2">
                             <div class="form-group" style="margin-bottom: 1.25rem;">
@@ -115,7 +178,8 @@
                             </div>
                             <div class="form-group" style="margin-bottom: 1.25rem;">
                                 <label style="font-weight: 500; font-size: 0.85rem;">System Role</label>
-                                <input type="text" id="profile-role" readonly disabled style="text-transform: capitalize; font-weight: 500; color: var(--accent);">
+                                <input type="text" id="profile-role" readonly disabled
+                                    style="text-transform: capitalize; font-weight: 500; color: var(--accent);">
                             </div>
                         </div>
                         <div class="form-group" style="margin-bottom: 1.5rem;">
@@ -123,14 +187,17 @@
                             <input type="email" id="profile-email" placeholder="e.g. name@company.com">
                         </div>
                         <div style="text-align: right;">
-                            <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.5rem;">Save Details</button>
+                            <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.5rem;">Save
+                                Details</button>
                         </div>
                     </form>
                 </div>
 
                 <div class="card" style="padding: 2rem; border-color: rgba(239, 68, 68, 0.2);">
-                    <h3 style="color: var(--color-primary); margin-bottom: 0.5rem; font-size: 1.15rem;">Security Credentials</h3>
-                    <p style="color: var(--color-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Ensure your account is using a long, random password to stay secure.</p>
+                    <h3 style="color: var(--color-primary); margin-bottom: 0.5rem; font-size: 1.15rem;">Security
+                        Credentials</h3>
+                    <p style="color: var(--color-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Ensure your
+                        account is using a long, random password to stay secure.</p>
                     <form id="profile-password-form">
                         <div class="form-group" style="margin-bottom: 1.25rem;">
                             <label style="font-weight: 500; font-size: 0.85rem;">Current Password</label>
@@ -147,7 +214,9 @@
                             </div>
                         </div>
                         <div style="text-align: right;">
-                            <button type="submit" class="btn btn-secondary" style="border-color: var(--error); color: var(--error); padding: 0.6rem 1.5rem;">Update Security</button>
+                            <button type="submit" class="btn btn-secondary"
+                                style="border-color: var(--error); color: var(--error); padding: 0.6rem 1.5rem;">Update
+                                Security</button>
                         </div>
                     </form>
                 </div>
@@ -155,30 +224,45 @@
             </div>
         </div>
     </div>
-    
+
     <style>
         @media (max-width: 768px) {
-            .profile-grid-layout { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
-            .profile-sidebar { border-right: none !important; border-bottom: 1px solid var(--card-border); padding-right: 0 !important; padding-bottom: 1rem; }
-            .profile-sidebar ul { display: flex; overflow-x: auto; gap: 0.5rem; }
-            .profile-sidebar li { flex: 0 0 auto; }
+            .profile-grid-layout {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+
+            .profile-sidebar {
+                border-right: none !important;
+                border-bottom: 1px solid var(--card-border);
+                padding-right: 0 !important;
+                padding-bottom: 1rem;
+            }
+
+            .profile-sidebar ul {
+                display: flex;
+                overflow-x: auto;
+                gap: 0.5rem;
+            }
+
+            .profile-sidebar li {
+                flex: 0 0 auto;
+            }
         }
     </style>
 
-    
+
     <script src="js/profile.js"></script>
 
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(reg => console.log('SW registered:', reg.scope))
-            .catch(err => console.log('SW registration failed:', err));
-        });
-      }
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
     </script>
 </body>
+
 </html>
-
-
-
