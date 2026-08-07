@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CryoLedger - Profile & Settings</title>
-
     <meta name="description" content="CryoLedger provides end-to-end supply chain assurance with GPS verification and cryptographic checks.">
     <meta property="og:title" content="CryoLedger - Supply Chain Integrity">
     <meta property="og:description" content="Secure Product Authentication System with Geo-Verification.">
@@ -14,19 +12,13 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="CryoLedger">
     <meta name="twitter:description" content="Protecting trust through location-intelligent product authentication.">
-
-<link rel="canonical" href="https://cryoledger-backend.onrender.com/profile.html">
-
+    <link rel="canonical" href="https://cryoledger-backend.onrender.com/profile.html">
     <link rel="stylesheet" href="styles.css">
-
-    <!-- PWA -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#10b981">
     <link rel="apple-touch-icon" href="/icons/icon.svg">
 </head>
-
 <body>
-  <!-- CryoLedger Global Splash Screen -->
   <div id="cryo-global-splash" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#0B1120; z-index:9999999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.8s ease, visibility 0.8s ease;">
     <style>
       @keyframes cryoSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -48,7 +40,6 @@
     (function(){
       let isReady = false;
       let isWindowLoaded = false;
-      
       const checkReady = () => {
         if(isReady && isWindowLoaded) {
           const splash = document.getElementById('cryo-global-splash');
@@ -59,111 +50,123 @@
           }
         }
       };
-
-      window.addEventListener('load', () => {
-        isWindowLoaded = true;
-        checkReady();
-      });
-
+      window.addEventListener('load', () => { isWindowLoaded = true; checkReady(); });
       const pingHealth = () => {
-        fetch('/api/health')
-          .then(res => {
-            if(res.ok) {
-              isReady = true;
-              checkReady();
-            } else {
-              setTimeout(pingHealth, 1000);
-            }
-          })
-          .catch(() => {
-            setTimeout(pingHealth, 1000);
-          });
+        fetch('/api/health').then(res => {
+            if(res.ok) { isReady = true; checkReady(); } else { setTimeout(pingHealth, 1000); }
+          }).catch(() => { setTimeout(pingHealth, 1000); });
       };
-      
       pingHealth();
-      
-      // Complete fallback in case there is no connection for 30s
-      setTimeout(() => {
-         if(!isReady) {
-            isReady = true;
-            checkReady();
-         }
-      }, 30000);
+      setTimeout(() => { if(!isReady) { isReady = true; checkReady(); } }, 30000);
     })();
   </script>
 
+  <script src="js/utils.js"></script>
 
-    <!-- Header is generated dynamically by utils.js -->
-
-    <div class="container" style="max-width: 600px; padding: 2rem 1rem;">
-        <div class="hero" style="text-align: center; margin-bottom: 2rem;">
-            <h1>Profile & Settings</h1>
-            <p>Update your contact details and change your account security settings.</p>
+    <!-- Profile Page Wrapper -->
+    <div class="container" style="max-width: 1000px; padding: 2rem 1rem;">
+        
+        <div class="hero" style="text-align: left; margin-bottom: 2rem; border-bottom: 1px solid var(--card-border); padding-bottom: 1rem;">
+            <h1 style="font-size: 2rem; margin-bottom: 0.25rem;">Account Settings</h1>
+            <p style="margin:0; color: var(--color-secondary);">Manage your security credentials and public profile information.</p>
         </div>
 
-        <!-- Alert Container -->
         <div id="alert-container"></div>
 
-        <!-- Profile Information Section -->
-        <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
-            <h3
-                style="color: var(--color-primary); margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem;">
-                🕵️ Personal Details</h3>
-            <form id="profile-info-form">
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label style="color: var(--color-secondary); font-size: 0.85rem;">Username</label>
-                    <input type="text" id="profile-username" readonly disabled
-                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: rgba(255,255,255,0.02); border: 1px solid var(--card-border); color: var(--color-secondary); border-radius: var(--radius-sm); cursor: not-allowed;">
-                </div>
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label style="color: var(--color-secondary); font-size: 0.85rem;">System Role</label>
-                    <input type="text" id="profile-role" readonly disabled
-                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: rgba(255,255,255,0.02); border: 1px solid var(--card-border); color: var(--color-secondary); border-radius: var(--radius-sm); cursor: not-allowed; text-transform: uppercase;">
-                </div>
-                                <div class="form-group" style="margin-bottom: 1.5rem; text-align: center;">
-                    <img id="profile-photo-preview" src="assets/default-avatar.png" alt="Profile" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); margin-bottom: 1rem; background-color: var(--bg-tertiary);">
-                    <div>
-                        <label style="color: var(--color-secondary); font-size: 0.85rem; text-align: left; display: block;">Avatar Image URL</label>
-                        <input type="text" id="profile-photo" placeholder="https://..." style="width: 100%; padding: 0.6rem 0.8rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+        <div style="display: grid; grid-template-columns: 250px 1fr; gap: 3rem; margin-top: 2rem;" class="profile-grid-layout">
+            
+            <!-- Left Sidebar -->
+            <div class="profile-sidebar" style="border-right: 1px solid var(--card-border); padding-right: 1.5rem;">
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 0.5rem;"><a href="#" style="display:block; padding: 0.75rem 1rem; background: var(--accent-light); color: var(--color-primary); border-radius: var(--radius-sm); font-weight: 600; text-decoration: none; border-left: 3px solid var(--accent);">User Profile</a></li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#" onclick="showAlert('Billing is not active on this tier.', 'info')" style="display:block; padding: 0.75rem 1rem; color: var(--color-secondary); font-weight: 500; text-decoration: none; transition: var(--transition);">Billing & Plans</a></li>
+                    <li style="margin-bottom: 0.5rem;"><a href="#" onclick="showAlert('Notification preferences coming soon.', 'info')" style="display:block; padding: 0.75rem 1rem; color: var(--color-secondary); font-weight: 500; text-decoration: none; transition: var(--transition);">Notifications</a></li>
+                </ul>
+            </div>
+
+            <!-- Right Content -->
+            <div class="profile-content">
+                
+                <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
+                    <h3 style="color: var(--color-primary); margin-bottom: 1.5rem; font-size: 1.15rem;">Public Avatar</h3>
+                    <div style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
+                        <div style="position: relative; cursor: pointer; flex-shrink: 0;" id="avatar-upload-container" title="Click to upload profile photo">
+                            <img id="profile-photo-preview" src="assets/default-avatar.png" alt="Profile" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--card-border); background-color: var(--bg-tertiary); box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: all 0.3s ease;">
+                            <div id="avatar-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; border-radius: 50%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: all 0.3s ease;">
+                                <span style="color: white; font-size: 1.5rem;">📸</span>
+                            </div>
+                            <!-- Real File Input (Hidden) -->
+                            <input type="file" id="profile-photo-file" accept="image/png, image/jpeg, image/webp" style="display: none;">
+                        </div>
+                        <div style="flex: 1; min-width: 250px;">
+                            <p style="color: var(--color-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">
+                                Clicking the circle will let you select an image file directly from your device. <br><br>The browser will automatically resize and crop your image to the correct proportions locally before saving.
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label style="color: var(--color-secondary); font-size: 0.85rem;">Email Address</label>
-                    <input type="email" id="profile-email" placeholder="e.g. yourname@example.com"
-                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Profile Details</button>
-            </form>
-        </div>
 
-        <!-- Password Change Section -->
-        <div class="card" style="padding: 2rem;">
-            <h3
-                style="color: var(--color-primary); margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.5rem;">
-                🔒 Security Credentials</h3>
-            <form id="profile-password-form">
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label style="color: var(--color-secondary); font-size: 0.85rem;">Current Password</label>
-                    <input type="password" id="current-password" placeholder="Enter current password" required
-                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+                <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
+                    <h3 style="color: var(--color-primary); margin-bottom: 1.5rem; font-size: 1.15rem;">Personal Details</h3>
+                    <form id="profile-info-form">
+                        <div class="grid-2">
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label style="font-weight: 500; font-size: 0.85rem;">Username</label>
+                                <input type="text" id="profile-username" readonly disabled style="font-weight: 500;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label style="font-weight: 500; font-size: 0.85rem;">System Role</label>
+                                <input type="text" id="profile-role" readonly disabled style="text-transform: capitalize; font-weight: 500; color: var(--accent);">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label style="font-weight: 500; font-size: 0.85rem;">Email Address</label>
+                            <input type="email" id="profile-email" placeholder="e.g. name@company.com">
+                        </div>
+                        <div style="text-align: right;">
+                            <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.5rem;">Save Details</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label style="color: var(--color-secondary); font-size: 0.85rem;">New Password</label>
-                    <input type="password" id="new-password" placeholder="Enter new password" required
-                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+
+                <div class="card" style="padding: 2rem; border-color: rgba(239, 68, 68, 0.2);">
+                    <h3 style="color: var(--color-primary); margin-bottom: 0.5rem; font-size: 1.15rem;">Security Credentials</h3>
+                    <p style="color: var(--color-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Ensure your account is using a long, random password to stay secure.</p>
+                    <form id="profile-password-form">
+                        <div class="form-group" style="margin-bottom: 1.25rem;">
+                            <label style="font-weight: 500; font-size: 0.85rem;">Current Password</label>
+                            <input type="password" id="current-password" placeholder="Enter current password" required>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label style="font-weight: 500; font-size: 0.85rem;">New Password</label>
+                                <input type="password" id="new-password" placeholder="Minimum 8 characters" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label style="font-weight: 500; font-size: 0.85rem;">Confirm New Password</label>
+                                <input type="password" id="confirm-password" placeholder="Retype new password" required>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <button type="submit" class="btn btn-secondary" style="border-color: var(--error); color: var(--error); padding: 0.6rem 1.5rem;">Update Security</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label style="color: var(--color-secondary); font-size: 0.85rem;">Confirm New Password</label>
-                    <input type="password" id="confirm-password" placeholder="Retype new password" required
-                        style="width: 100%; padding: 0.6rem 0.8rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
-                </div>
-                <button type="submit" class="btn btn-secondary" style="width: 100%;">Update Security
-                    Credentials</button>
-            </form>
+
+            </div>
         </div>
     </div>
+    
+    <style>
+        @media (max-width: 768px) {
+            .profile-grid-layout { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+            .profile-sidebar { border-right: none !important; border-bottom: 1px solid var(--card-border); padding-right: 0 !important; padding-bottom: 1rem; }
+            .profile-sidebar ul { display: flex; overflow-x: auto; gap: 0.5rem; }
+            .profile-sidebar li { flex: 0 0 auto; }
+        }
+    </style>
 
-    <script src="js/utils.js"></script>
+    <script>createHeader(); createFooter();</script>
     <script src="js/profile.js"></script>
 
     <script>
@@ -176,8 +179,4 @@
       }
     </script>
 </body>
-
 </html>
-
-
-
