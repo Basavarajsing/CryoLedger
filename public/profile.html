@@ -120,6 +120,13 @@
                     <input type="text" id="profile-role" readonly disabled
                         style="width: 100%; padding: 0.6rem 0.8rem; background-color: rgba(255,255,255,0.02); border: 1px solid var(--card-border); color: var(--color-secondary); border-radius: var(--radius-sm); cursor: not-allowed; text-transform: uppercase;">
                 </div>
+                                <div class="form-group" style="margin-bottom: 1.5rem; text-align: center;">
+                    <img id="profile-photo-preview" src="assets/default-avatar.png" alt="Profile" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); margin-bottom: 1rem; background-color: var(--bg-tertiary);">
+                    <div>
+                        <label style="color: var(--color-secondary); font-size: 0.85rem; text-align: left; display: block;">Avatar Image URL</label>
+                        <input type="text" id="profile-photo" placeholder="https://..." style="width: 100%; padding: 0.6rem 0.8rem; background-color: var(--bg-tertiary); border: 1px solid var(--card-border); color: var(--color-primary); border-radius: var(--radius-sm);">
+                    </div>
+                </div>
                 <div class="form-group" style="margin-bottom: 1.5rem;">
                     <label style="color: var(--color-secondary); font-size: 0.85rem;">Email Address</label>
                     <input type="email" id="profile-email" placeholder="e.g. yourname@example.com"
@@ -171,3 +178,4 @@
 </body>
 
 </html>
+

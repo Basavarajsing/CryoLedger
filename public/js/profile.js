@@ -9,6 +9,8 @@ createFooter();
 const usernameInput = document.getElementById('profile-username');
 const roleInput = document.getElementById('profile-role');
 const emailInput = document.getElementById('profile-email');
+const photoInput = document.getElementById('profile-photo');
+const photoPreview = document.getElementById('profile-photo-preview');
 
 const infoForm = document.getElementById('profile-info-form');
 const passwordForm = document.getElementById('profile-password-form');
@@ -23,6 +25,8 @@ async function loadProfile() {
             usernameInput.value = result.data.username;
             roleInput.value = result.data.role;
             emailInput.value = result.data.email;
+            photoInput.value = result.data.profilePhoto || '';
+            if (photoInput.value) photoPreview.src = photoInput.value;
         } else {
             showAlert("Failed to load user profile details.", "error");
         }
@@ -37,16 +41,18 @@ infoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const email = emailInput.value.trim();
+    const profilePhoto = photoInput.value.trim();
 
     try {
         const res = await authenticatedFetch('/api/user/profile', {
             method: 'POST',
-            body: { email }
+            body: { email, profilePhoto }
         });
 
         const result = await res.json();
         if (result.success) {
-            showAlert("Email updated successfully.", "success");
+            showAlert("Profile details updated successfully.", "success");
+            if (profilePhoto) photoPreview.src = profilePhoto;
         } else {
             showAlert(result.message || "Failed to update email.", "error");
         }
@@ -94,3 +100,4 @@ passwordForm.addEventListener('submit', async (e) => {
 
 // Initial load
 loadProfile();
+

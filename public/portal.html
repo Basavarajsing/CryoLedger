@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentication Portal - CryoLedger</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { background-color: var(--bg-primary); display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .portal-container { text-align: center; max-width: 1000px; width: 100%; padding: 2rem; }
+    .portal-brand { font-size: 2.5rem; font-weight: 800; color: var(--color-primary); margin-bottom: 2rem; }
+    .portal-brand span { color: var(--accent); }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 768px) { .options-grid { grid-template-columns: 1fr; } }
+    .portal-card {
+        background-color: rgba(19, 28, 49, 0.7);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-lg);
+        padding: 4rem 2rem;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        text-decoration: none;
+        color: var(--color-primary);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+    .portal-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent);
+        box-shadow: 0 0 25px rgba(16,185,129,0.3);
+    }
+    .portal-card.admin:hover {
+        border-color: var(--info);
+        box-shadow: 0 0 25px rgba(59,130,246,0.3);
+    }
+    .card-icon { font-size: 3.5rem; margin-bottom: 1.5rem; }
+    .card-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; }
+    .card-desc { font-size: 1rem; color: var(--color-secondary); line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="portal-container">
+    <div class="portal-brand">
+      ❄️ Cryo<span>Ledger</span><br>
+      <span style="font-size:1.25rem; color:var(--color-secondary); font-weight:500;">Select Identity Provider</span>
+    </div>
+    
+    <div class="options-grid">
+      <!-- Customer Identity -->
+      <a href="login.html" class="portal-card">
+        <div class="card-icon">🛍️</div>
+        <div class="card-title">Customers & Retailers</div>
+        <div class="card-desc">Login here to track your warranties, track verified supply chain status, and report anomalies.</div>
+      </a>
+      
+      <!-- Manufacturer Identity -->
+      <a href="admin-login.html" class="portal-card admin">
+        <div class="card-icon">🏭</div>
+        <div class="card-title">Manufacturer Administration</div>
+        <div class="card-desc">Login here to register secure cryptographic batches natively, monitor live telemetry, and analyze audits.</div>
+      </a>
+    </div>
+    
+    <div style="margin-top: 3rem;">
+        <a href="index.html" style="color: var(--color-secondary); text-decoration: none; font-size: 0.95rem;">&larr; Return to Homepage</a>
+    </div>
+  </div>
+</body>
+</html>

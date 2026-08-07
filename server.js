@@ -2572,7 +2572,7 @@ app.get('/api/user/profile', authenticateJWT, async (req, res) => {
             data: {
                 username: user.username,
                 role: user.role,
-                email: user.email || ""
+                email: user.email || "", profilePhoto: user.profilePhoto || ""
             }
         });
     } catch (error) {
@@ -2584,7 +2584,7 @@ app.get('/api/user/profile', authenticateJWT, async (req, res) => {
 app.post('/api/user/profile', authenticateJWT, async (req, res) => {
     try {
         const username = req.user.username.toLowerCase();
-        const { email, currentPassword, newPassword, confirmPassword } = req.body;
+        const { email, currentPassword, newPassword, confirmPassword, profilePhoto } = req.body;
 
         const user = await User.findOne({ username });
         if (!user) return res.status(404).json({ success: false, message: "User not found." });
@@ -2616,6 +2616,12 @@ app.post('/api/user/profile', authenticateJWT, async (req, res) => {
 
             // Hash and update
             user.password = await bcrypt.hash(newPassword, 10);
+            updated = true;
+        }
+
+                // 3. Update profile photo if provided
+        if (profilePhoto !== undefined) {
+            user.profilePhoto = profilePhoto;
             updated = true;
         }
 
@@ -2862,4 +2868,6 @@ if (require.main === module) {
 }
 
 module.exports = app;
+
+
 

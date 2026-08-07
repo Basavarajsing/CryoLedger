@@ -232,8 +232,8 @@ function createHeader(activePage = '') {
     if (!token) {
         // Guest mode navigation
         navLinksHTML = `
-            <li><a href="login.html" class="${activePage === 'login' ? 'active' : ''}">Customer Portal</a></li>
-            <li><a href="admin-login.html" class="${activePage === 'admin-login' ? 'active' : ''}">Admin Portal</a></li>
+            <li><a href="verify.html" class="${activePage === 'verify' ? 'active' : ''}">Verify Product</a></li>
+            <li><a href="portal.html" class="btn btn-primary" style="padding: 0.4rem 1.2rem; margin-left: 0.5rem; text-decoration: none; color: white;">Register / Log In</a></li>
         `;
     } else if (role === 'admin') {
         // Admin logged in navigation
@@ -273,6 +273,12 @@ function createHeader(activePage = '') {
             <li><a href="profile.html" class="${activePage === 'profile' ? 'active' : ''}">Settings</a></li>
             ${headerNotificationsListHTML}
             <li><button onclick="logout()" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-left: 0.5rem; background-color: transparent; border-color: var(--error); color: var(--error); cursor: pointer;">Log Out</button></li>
+        `;
+    } else {
+        localStorage.clear();
+        navLinksHTML = `
+            <li><a href="verify.html" class="${activePage === 'verify' ? 'active' : ''}">Verify Product</a></li>
+            <li><a href="portal.html" class="btn btn-primary" style="padding: 0.4rem 1.2rem; margin-left: 0.5rem; text-decoration: none; color: white;">Register / Log In</a></li>
         `;
     }
 
@@ -510,5 +516,6 @@ window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
     console.log('PWA was installed');
 });
+
 
 
