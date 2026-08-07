@@ -243,36 +243,84 @@ function createHeader(activePage = '') {
             <li><a href="admin.html" class="${activePage === 'admin' ? 'active' : ''}">Bypass Console</a></li>
             <li><a href="records.html" class="${activePage === 'records' ? 'active' : ''}">Product Records</a></li>
             <li><a href="users.html" class="${activePage === 'users' ? 'active' : ''}">User Management</a></li>
-            <li><a href="profile.html" class="${activePage === 'profile' ? 'active' : ''}">Settings</a></li>
-            ${headerNotificationsListHTML}
-            <li><button onclick="logout()" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-left: 0.5rem; background-color: transparent; border-color: var(--error); color: var(--error); cursor: pointer;">Log Out</button></li>
+                        <li style="position: relative; margin-left: 1rem;" id="nav-profile-container">
+                <button id="nav-profile-trigger" style="background: none; border: 2px solid transparent; border-radius: 50%; cursor: pointer; padding: 2px; transition: var(--transition); display: flex; align-items: center; justify-content: center;">
+                    <img id="nav-profile-avatar" src="assets/default-avatar.png" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                </button>
+                <div id="nav-profile-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 110%; width: 240px; padding: 1rem; z-index: 10006; background-color: var(--bg-secondary); border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border-radius: var(--radius-md);">
+                    <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; margin-bottom: 0.75rem; text-align: left;">
+                        <strong id="nav-dropdown-username" style="display: block; color: var(--color-primary); font-size: 0.95rem; text-transform: capitalize;">Loading...</strong>
+                        <span id="nav-dropdown-role" style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;"></span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 0; text-align: left;">
+                        <li style="margin-bottom: 0.5rem;"><a href="profile.html" style="color: var(--color-secondary); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: var(--radius-sm); transition: var(--transition);" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.05)'; this.style.color='var(--color-primary)';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--color-secondary)';">⚙️ Profile Settings</a></li>
+                        <li><button onclick="logout()" style="width: 100%; text-align: left; background: none; border: none; color: #ef4444; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);" onmouseover="this.style.backgroundColor='rgba(239, 68, 68, 0.1)';" onmouseout="this.style.backgroundColor='transparent';">🚪 Sign Out</button></li>
+                    </ul>
+                </div>
+            </li>
         `;
     } else if (role === 'distributor') {
         // Distributor navigation
         navLinksHTML = `
             <li><a href="distributor-dashboard.html" class="${activePage === 'distributor' ? 'active' : ''}">Depot Dashboard</a></li>
             <li><a href="verify.html" class="${activePage === 'verify' ? 'active' : ''}">Verify Product</a></li>
-            <li><a href="profile.html" class="${activePage === 'profile' ? 'active' : ''}">Settings</a></li>
-            ${headerNotificationsListHTML}
-            <li><button onclick="logout()" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-left: 0.5rem; background-color: transparent; border-color: var(--error); color: var(--error); cursor: pointer;">Log Out</button></li>
+                        <li style="position: relative; margin-left: 1rem;" id="nav-profile-container">
+                <button id="nav-profile-trigger" style="background: none; border: 2px solid transparent; border-radius: 50%; cursor: pointer; padding: 2px; transition: var(--transition); display: flex; align-items: center; justify-content: center;">
+                    <img id="nav-profile-avatar" src="assets/default-avatar.png" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                </button>
+                <div id="nav-profile-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 110%; width: 240px; padding: 1rem; z-index: 10006; background-color: var(--bg-secondary); border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border-radius: var(--radius-md);">
+                    <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; margin-bottom: 0.75rem; text-align: left;">
+                        <strong id="nav-dropdown-username" style="display: block; color: var(--color-primary); font-size: 0.95rem; text-transform: capitalize;">Loading...</strong>
+                        <span id="nav-dropdown-role" style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;"></span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 0; text-align: left;">
+                        <li style="margin-bottom: 0.5rem;"><a href="profile.html" style="color: var(--color-secondary); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: var(--radius-sm); transition: var(--transition);" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.05)'; this.style.color='var(--color-primary)';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--color-secondary)';">⚙️ Profile Settings</a></li>
+                        <li><button onclick="logout()" style="width: 100%; text-align: left; background: none; border: none; color: #ef4444; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);" onmouseover="this.style.backgroundColor='rgba(239, 68, 68, 0.1)';" onmouseout="this.style.backgroundColor='transparent';">🚪 Sign Out</button></li>
+                    </ul>
+                </div>
+            </li>
         `;
     } else if (role === 'retailer') {
         // Retailer navigation
         navLinksHTML = `
             <li><a href="retailer-dashboard.html" class="${activePage === 'retailer' ? 'active' : ''}">Retail Dashboard</a></li>
             <li><a href="verify.html" class="${activePage === 'verify' ? 'active' : ''}">Verify Product</a></li>
-            <li><a href="profile.html" class="${activePage === 'profile' ? 'active' : ''}">Settings</a></li>
-            ${headerNotificationsListHTML}
-            <li><button onclick="logout()" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-left: 0.5rem; background-color: transparent; border-color: var(--error); color: var(--error); cursor: pointer;">Log Out</button></li>
+                        <li style="position: relative; margin-left: 1rem;" id="nav-profile-container">
+                <button id="nav-profile-trigger" style="background: none; border: 2px solid transparent; border-radius: 50%; cursor: pointer; padding: 2px; transition: var(--transition); display: flex; align-items: center; justify-content: center;">
+                    <img id="nav-profile-avatar" src="assets/default-avatar.png" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                </button>
+                <div id="nav-profile-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 110%; width: 240px; padding: 1rem; z-index: 10006; background-color: var(--bg-secondary); border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border-radius: var(--radius-md);">
+                    <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; margin-bottom: 0.75rem; text-align: left;">
+                        <strong id="nav-dropdown-username" style="display: block; color: var(--color-primary); font-size: 0.95rem; text-transform: capitalize;">Loading...</strong>
+                        <span id="nav-dropdown-role" style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;"></span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 0; text-align: left;">
+                        <li style="margin-bottom: 0.5rem;"><a href="profile.html" style="color: var(--color-secondary); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: var(--radius-sm); transition: var(--transition);" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.05)'; this.style.color='var(--color-primary)';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--color-secondary)';">⚙️ Profile Settings</a></li>
+                        <li><button onclick="logout()" style="width: 100%; text-align: left; background: none; border: none; color: #ef4444; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);" onmouseover="this.style.backgroundColor='rgba(239, 68, 68, 0.1)';" onmouseout="this.style.backgroundColor='transparent';">🚪 Sign Out</button></li>
+                    </ul>
+                </div>
+            </li>
         `;
     } else if (role === 'user') {
         // User logged in navigation
         navLinksHTML = `
             <li><a href="user-dashboard.html" class="${activePage === 'home' ? 'active' : ''}">Dashboard</a></li>
             <li><a href="verify.html" class="${activePage === 'verify' ? 'active' : ''}">Verify Product</a></li>
-            <li><a href="profile.html" class="${activePage === 'profile' ? 'active' : ''}">Settings</a></li>
-            ${headerNotificationsListHTML}
-            <li><button onclick="logout()" class="btn btn-secondary" style="padding: 0.3rem 0.8rem; font-size: 0.85rem; margin-left: 0.5rem; background-color: transparent; border-color: var(--error); color: var(--error); cursor: pointer;">Log Out</button></li>
+                        <li style="position: relative; margin-left: 1rem;" id="nav-profile-container">
+                <button id="nav-profile-trigger" style="background: none; border: 2px solid transparent; border-radius: 50%; cursor: pointer; padding: 2px; transition: var(--transition); display: flex; align-items: center; justify-content: center;">
+                    <img id="nav-profile-avatar" src="assets/default-avatar.png" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                </button>
+                <div id="nav-profile-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 110%; width: 240px; padding: 1rem; z-index: 10006; background-color: var(--bg-secondary); border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border-radius: var(--radius-md);">
+                    <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; margin-bottom: 0.75rem; text-align: left;">
+                        <strong id="nav-dropdown-username" style="display: block; color: var(--color-primary); font-size: 0.95rem; text-transform: capitalize;">Loading...</strong>
+                        <span id="nav-dropdown-role" style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;"></span>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 0; text-align: left;">
+                        <li style="margin-bottom: 0.5rem;"><a href="profile.html" style="color: var(--color-secondary); text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: var(--radius-sm); transition: var(--transition);" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.05)'; this.style.color='var(--color-primary)';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--color-secondary)';">⚙️ Profile Settings</a></li>
+                        <li><button onclick="logout()" style="width: 100%; text-align: left; background: none; border: none; color: #ef4444; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);" onmouseover="this.style.backgroundColor='rgba(239, 68, 68, 0.1)';" onmouseout="this.style.backgroundColor='transparent';">🚪 Sign Out</button></li>
+                    </ul>
+                </div>
+            </li>
         `;
     } else {
         localStorage.clear();
@@ -303,7 +351,43 @@ function createHeader(activePage = '') {
     // Initialize notification features if user is logged in
     if (token) {
         setTimeout(initHeaderNotifications, 50);
+        setTimeout(initUserDropdown, 50);
     }
+
+async function initUserDropdown() {
+    const trigger = document.getElementById('nav-profile-trigger');
+    const dropdown = document.getElementById('nav-profile-dropdown');
+    
+    if (trigger && dropdown) {
+        // Toggle dropdown
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target) && !trigger.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Fetch User Data for Navbar
+        try {
+            const res = await authenticatedFetch('/api/user/profile');
+            const result = await res.json();
+            if (result.success && result.data) {
+                document.getElementById('nav-dropdown-username').textContent = result.data.username;
+                document.getElementById('nav-dropdown-role').textContent = result.data.role + " account";
+                if (result.data.profilePhoto) {
+                    document.getElementById('nav-profile-avatar').src = result.data.profilePhoto;
+                }
+            }
+        } catch (err) {
+            console.error("Could not load mini profile details", err);
+        }
+    }
+}
 }
 
 /**
@@ -516,6 +600,7 @@ window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
     console.log('PWA was installed');
 });
+
 
 
 
