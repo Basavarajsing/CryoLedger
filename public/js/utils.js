@@ -245,7 +245,7 @@ function createHeader(activePage = '') {
             <li><a href="users.html" class="${activePage === 'users' ? 'active' : ''}">User Management</a></li>
                         <li style="position: relative; margin-left: 1rem;" id="nav-profile-container">
                 <button id="nav-profile-trigger" style="background: none; border: 2px solid transparent; border-radius: 50%; cursor: pointer; padding: 2px; transition: var(--transition); display: flex; align-items: center; justify-content: center;">
-                    <img id="nav-profile-avatar" src="assets/default-avatar.png" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                    <img id="nav-profile-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a1a1aa'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
                 </button>
                 <div id="nav-profile-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 110%; width: 240px; padding: 1rem; z-index: 10006; background-color: var(--bg-secondary); border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border-radius: var(--radius-md);">
                     <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; margin-bottom: 0.75rem; text-align: left;">
@@ -266,7 +266,7 @@ function createHeader(activePage = '') {
             <li><a href="verify.html" class="${activePage === 'verify' ? 'active' : ''}">Verify Product</a></li>
                         <li style="position: relative; margin-left: 1rem;" id="nav-profile-container">
                 <button id="nav-profile-trigger" style="background: none; border: 2px solid transparent; border-radius: 50%; cursor: pointer; padding: 2px; transition: var(--transition); display: flex; align-items: center; justify-content: center;">
-                    <img id="nav-profile-avatar" src="assets/default-avatar.png" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                    <img id="nav-profile-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a1a1aa'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
                 </button>
                 <div id="nav-profile-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 110%; width: 240px; padding: 1rem; z-index: 10006; background-color: var(--bg-secondary); border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border-radius: var(--radius-md);">
                     <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; margin-bottom: 0.75rem; text-align: left;">
@@ -287,7 +287,7 @@ function createHeader(activePage = '') {
             <li><a href="verify.html" class="${activePage === 'verify' ? 'active' : ''}">Verify Product</a></li>
                         <li style="position: relative; margin-left: 1rem;" id="nav-profile-container">
                 <button id="nav-profile-trigger" style="background: none; border: 2px solid transparent; border-radius: 50%; cursor: pointer; padding: 2px; transition: var(--transition); display: flex; align-items: center; justify-content: center;">
-                    <img id="nav-profile-avatar" src="assets/default-avatar.png" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                    <img id="nav-profile-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a1a1aa'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
                 </button>
                 <div id="nav-profile-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 110%; width: 240px; padding: 1rem; z-index: 10006; background-color: var(--bg-secondary); border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border-radius: var(--radius-md);">
                     <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; margin-bottom: 0.75rem; text-align: left;">
@@ -308,7 +308,7 @@ function createHeader(activePage = '') {
             <li><a href="verify.html" class="${activePage === 'verify' ? 'active' : ''}">Verify Product</a></li>
                         <li style="position: relative; margin-left: 1rem;" id="nav-profile-container">
                 <button id="nav-profile-trigger" style="background: none; border: 2px solid transparent; border-radius: 50%; cursor: pointer; padding: 2px; transition: var(--transition); display: flex; align-items: center; justify-content: center;">
-                    <img id="nav-profile-avatar" src="assets/default-avatar.png" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                    <img id="nav-profile-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a1a1aa'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="Profile" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
                 </button>
                 <div id="nav-profile-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 110%; width: 240px; padding: 1rem; z-index: 10006; background-color: var(--bg-secondary); border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border-radius: var(--radius-md);">
                     <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; margin-bottom: 0.75rem; text-align: left;">
